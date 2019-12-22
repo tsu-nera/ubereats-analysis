@@ -7,6 +7,41 @@
 
 from scrapy import signals
 
+from scrapy.http import HtmlResponse
+from selenium.webdriver import Chrome, ChromeOptions
+
+CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+GOOGLE_CHROME_PATH = "/usr/bin/google-chrome-stable"
+
+options = ChromeOptions()
+
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("start-maximized")
+options.add_argument("disable-infobars")
+options.add_argument("--disable-extensions")
+options.add_argument("--disable-gpu")
+options.add_argument("--remote-debugging-port=9222")
+
+options.headless = True
+options.binary_location = GOOGLE_CHROME_PATH
+
+driver = Chrome(options=options)
+
+
+class SeleniumMiddleware(object):
+    def process_request(self, request, spider):
+        driver.get(request.url)
+
+        return HtmlResponse(driver.current_url,
+                            body=driver.page_source,
+                            encoding='utf-8',
+                            request=request)
+
+
+def close_driver(self):
+    driver.close()
+
 
 class UbereatsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
