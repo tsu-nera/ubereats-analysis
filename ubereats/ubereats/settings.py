@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from shutil import which
-
 # Scrapy settings for ubereats project
 #
 # For simplicity, this file contains only settings considered important or
@@ -59,6 +57,9 @@ COOKIES_ENABLED = False
 #DOWNLOADER_MIDDLEWARES = {
 #    'ubereats.middlewares.UbereatsDownloaderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+    'ubereats.middlewares.SeleniumMiddleware': 200,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html

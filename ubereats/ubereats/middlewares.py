@@ -1,44 +1,50 @@
 # -*- coding: utf-8 -*-
-
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
 from scrapy import signals
 
 from scrapy.http import HtmlResponse
+from scrapy.utils.python import to_bytes
 from selenium.webdriver import Chrome, ChromeOptions
 
 CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
 
-options = ChromeOptions()
-
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-options.add_argument("start-maximized")
-options.add_argument("disable-infobars")
-options.add_argument("--disable-extensions")
-options.add_argument("--disable-gpu")
-options.add_argument("--remote-debugging-port=9222")
-options.binary_location = CHROMEDRIVER_PATH
-
-driver = Chrome(options=options)
-
 
 class SeleniumMiddleware(object):
-    def process_request(self, request, spider):
-        driver.get(request.url)
+    @classmethod
+    def from_crawler(cls, crawler):
+        middleware = cls()
+        crawler.signals.connect(middleware.spider_opened,
+                                signals.spider_opened)
+        crawler.signals.connect(middleware.spider_closed,
+                                signals.spider_closed)
+        return middleware
 
-        return HtmlResponse(driver.current_url,
-                            body=driver.page_source,
+    def process_request(self, request, spider):
+        request.meta['driver'] = self.driver  # to access driver from response
+        self.driver.get(request.url)
+
+        body = to_bytes(self.driver.page_source)  # body must be of type bytes
+        return HtmlResponse(self.driver.current_url,
+                            body=body,
                             encoding='utf-8',
                             request=request)
 
+    def spider_opened(self, spider):
+        options = ChromeOptions()
 
-def close_driver(self):
-    driver.close()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("start-maximized")
+        options.add_argument("disable-infobars")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--remote-debugging-port=9222")
+        options.binary_location = CHROMEDRIVER_PATH
+
+        self.driver = Chrome(options=options)
+
+    def spider_closed(self, spider):
+        self.driver.close()
 
 
 class UbereatsSpiderMiddleware(object):
