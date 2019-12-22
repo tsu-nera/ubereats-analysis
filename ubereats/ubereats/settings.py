@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for webscraping project
+# Scrapy settings for ubereats project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'webscraping'
+BOT_NAME = 'ubereats'
 
-SPIDER_MODULES = ['webscraping.spiders']
-NEWSPIDER_MODULE = 'webscraping.spiders'
+SPIDER_MODULES = ['ubereats.spiders']
+NEWSPIDER_MODULE = 'ubereats.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'webscraping (+http://www.yourdomain.com)'
+#USER_AGENT = 'ubereats (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'webscraping.middlewares.WebscrapingSpiderMiddleware': 543,
+#    'ubereats.middlewares.UbereatsSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'webscraping.middlewares.WebscrapingDownloaderMiddleware': 543,
+#    'ubereats.middlewares.UbereatsDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'webscraping.pipelines.WebscrapingPipeline': 300,
+#    'ubereats.pipelines.UbereatsPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
