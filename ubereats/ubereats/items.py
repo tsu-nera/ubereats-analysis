@@ -3,5 +3,5 @@
 import scrapy
 
 
-class UbereatsItem(scrapy.Item):
-    shop_name = scrapy.Field()
+class ShopItem(scrapy.Item):
+    name = scrapy.Field()
