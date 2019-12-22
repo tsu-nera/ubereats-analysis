@@ -57,6 +57,7 @@ COOKIES_ENABLED = False
 #DOWNLOADER_MIDDLEWARES = {
 #    'ubereats.middlewares.UbereatsDownloaderMiddleware': 543,
 #}
+
 DOWNLOADER_MIDDLEWARES = {
     'ubereats.middlewares.SeleniumMiddleware': 200,
 }

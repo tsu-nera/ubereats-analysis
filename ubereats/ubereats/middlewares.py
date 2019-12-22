@@ -4,8 +4,8 @@ from scrapy import signals
 from scrapy.http import HtmlResponse
 from scrapy.utils.python import to_bytes
 from selenium.webdriver import Chrome, ChromeOptions
-
-CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
 
 class SeleniumMiddleware(object):
@@ -21,6 +21,8 @@ class SeleniumMiddleware(object):
     def process_request(self, request, spider):
         request.meta['driver'] = self.driver  # to access driver from response
         self.driver.get(request.url)
+        # WebDriverWait(self.driver,
+        #               15).until(EC.presence_of_all_elements_located)
 
         body = to_bytes(self.driver.page_source)  # body must be of type bytes
         return HtmlResponse(self.driver.current_url,
@@ -31,15 +33,15 @@ class SeleniumMiddleware(object):
     def spider_opened(self, spider):
         options = ChromeOptions()
 
+        # Chromeを閉じて--remote-debugging-portを指定するか、headlessをつけるのどちらか
         options.add_argument("--headless")
+        # options.add_argument("--remote-debugging-port=9222")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("start-maximized")
         options.add_argument("disable-infobars")
         options.add_argument("--disable-extensions")
         options.add_argument("--disable-gpu")
-        options.add_argument("--remote-debugging-port=9222")
-        options.binary_location = CHROMEDRIVER_PATH
 
         self.driver = Chrome(options=options)
 
