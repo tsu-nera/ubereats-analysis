@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from scrapy_splash import SplashRequest
+
 from ..items import ShopItem
-from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN  # noqa
+from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
 
 
 class FeedSpider(scrapy.Spider):
@@ -9,8 +11,25 @@ class FeedSpider(scrapy.Spider):
     allowed_domains = [BASE_DOMAIN]
     start_urls = [MUSASHINAKAHARA_FEED_URL]
 
+    def start_requests(self):
+        for url in self.start_urls:
+            yield SplashRequest(url, self.parse, args={'wait': 0.5})
+
     def parse(self, response):
+        for href in response.xpath("//a/@href").re(
+                '(/ja-JP/.*/food-delivery/.*)'):
+            full_url = BASE_URL + href
+
+            yield scrapy.Request(full_url, callback=self.parse_item)
+
+    def parse_item(self, response):
+
         shop = ShopItem()
-        shop["name"] = response.css("body").extract()
+        shop["detail_url"] = response.url
 
         yield shop
+
+        # article = response.css("article.af")[0]
+        # shop["name"] = article.css("div")[6].css("div::text").extract()
+
+        # yield shop
