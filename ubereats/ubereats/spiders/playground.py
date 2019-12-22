@@ -15,6 +15,6 @@ class PlaygroundSpider(scrapy.Spider):
 
     def parse(self, response):
         shop = ShopItem()
-        shop["name"] = response.css("body").extract()
+        shop["name"] = response.css("article div::text")[1].extract()
 
         yield shop
