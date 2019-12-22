@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from ..items import ShopItem
-from ..constants import MUSASHINAKAHARA_STATION_URL, BASE_DOMAIN
+from ..constants import MUSASHINAKAHARA_FEED_URL, MUSASHINAKAHRA_POPULAR_URL, BASE_DOMAIN  # noqa
 
 
 class FeedSpider(scrapy.Spider):
     name = 'feed'
     allowed_domains = [BASE_DOMAIN]
-    start_urls = [MUSASHINAKAHARA_STATION_URL]
+    start_urls = [MUSASHINAKAHARA_FEED_URL, MUSASHINAKAHRA_POPULAR_URL]
 
     def parse(self, response):
         shop = ShopItem()
