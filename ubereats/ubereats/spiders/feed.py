@@ -13,9 +13,11 @@ class FeedSpider(scrapy.Spider):
 
     def start_requests(self):
         for url in self.start_urls:
-            yield SplashRequest(url, self.parse, args={'wait': 0.5})
+            yield SplashRequest(url, self.parse, args={'wait': 5})
 
     def parse(self, response):
+        print("Parsing...\n")
+
         for href in response.xpath("//a/@href").re(
                 '(/ja-JP/.*/food-delivery/.*)'):
             full_url = BASE_URL + href
