@@ -21,11 +21,15 @@ class SeleniumMiddleware(object):
 
     def process_request(self, request, spider):
         request.meta['driver'] = self.driver  # to access driver from response
-        self.driver.get(request.url)
-        WebDriverWait(self.driver, 15).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "ds")))
 
-        body = to_bytes(self.driver.page_source)  # body must be of type bytes
+        # start
+        self.driver.get(request.url)
+
+        # wait page loading...
+        WebDriverWait(self.driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "article.af")))
+
+        body = to_bytes(self.driver.page_source)
         return HtmlResponse(self.driver.current_url,
                             body=body,
                             encoding='utf-8',
@@ -36,7 +40,7 @@ class SeleniumMiddleware(object):
 
         # Chromeを閉じて--remote-debugging-portを指定するか、headlessをつけるのどちらか
         options.add_argument("--headless")
-        options.add_argument("--remote-debugging-port=9222")
+        #　options.add_argument("--remote-debugging-port=9222")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("start-maximized")
