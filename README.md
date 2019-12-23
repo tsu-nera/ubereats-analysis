@@ -1,4 +1,4 @@
-UberEats Analysis for 武蔵中原
+UberEats Analysis
 ===
 
 ![](https://img.shields.io/github/license/tsu-nera/ubereats-analysis.svg)
