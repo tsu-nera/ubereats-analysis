@@ -1,5 +1,6 @@
 import scrapy
 import re
+import time
 
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,7 +19,7 @@ class FeedSpider(scrapy.Spider):
     def __init__(self):
         options = ChromeOptions()
 
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -32,20 +33,37 @@ class FeedSpider(scrapy.Spider):
 
         self.driver.get(response.url)
         WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "article.af")))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "article.af")))
 
-        res = response.replace(
-            body=self.driver.page_source)  # レスポンスオブジェクトのHTMLをseleniumのものと差し替える
+        pre_loaded_count = 0
 
-        for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
-            full_url = BASE_URL + href
+        res = response.replace(body=self.driver.page_source)
+        shop_hrefs = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')
+        loaded_count = len(shop_hrefs)
 
-            yield scrapy.Request(full_url, callback=self.parse_shop)
+        while loaded_count != pre_loaded_count:
+            pre_loaded_count = loaded_count
 
-        # 1つの店舗を試したいときのデバッグ用
-        # href = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')[0]
-        # full_url = BASE_URL + href
-        # yield scrapy.Request(full_url, callback=self.parse_shop)
+            # for href in shop_hrefs[pre_loaded_count:]:
+            #     full_url = BASE_URL + href
+
+            #     yield scrapy.Request(full_url, callback=self.parse_shop)
+
+            self.driver.execute_script(
+                "window.scrollTo(0, document.body.scrollHeight);")
+
+            buttons = self.driver.find_elements_by_xpath(
+                "//button[contains(text(), 'さらに表示')]")
+
+            for button in buttons:
+                button.click()
+
+            time.sleep(5)
+
+            res = response.replace(body=self.driver.page_source)
+            shop_hrefs = res.xpath("//a/@href").re(
+                '(/ja-JP/.*/food-delivery/.*)')
+            loaded_count = len(shop_hrefs)
 
     def parse_shop(self, response):
 
