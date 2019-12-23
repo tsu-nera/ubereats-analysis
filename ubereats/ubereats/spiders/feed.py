@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy_splash import SplashRequest
 
 from ..items import ShopItem
 from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
@@ -10,10 +9,6 @@ class FeedSpider(scrapy.Spider):
     name = 'feed'
     allowed_domains = [BASE_DOMAIN]
     start_urls = [MUSASHINAKAHARA_FEED_URL]
-
-    def start_requests(self):
-        for url in self.start_urls:
-            yield SplashRequest(url, self.parse, args={'wait': 5})
 
     def parse(self, response):
         print("Parsing...\n")
