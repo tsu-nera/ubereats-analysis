@@ -10,12 +10,20 @@ from selenium.common.exceptions import TimeoutException
 
 from ..items import ShopItem
 from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
+from ..constants import MUSASHINAKAHARA_SEARCH_NAKAHARA_URL, MUSASHINAKAHARA_SEARCH_KOSUGI_URL, MUSASHINAKAHARA_SEARCH_SHINJO_URL  # noqa
 
 
 class FeedSpider(scrapy.Spider):
     name = 'feed'
     allowed_domains = [BASE_DOMAIN]
-    start_urls = [MUSASHINAKAHARA_FEED_URL]
+
+    # start_urls = [MUSASHINAKAHARA_FEED_URL]
+    # start_urls = [
+    #     MUSASHINAKAHARA_SEARCH_KOSUGI_URL,
+    #     MUSASHINAKAHARA_SEARCH_NAKAHARA_URL,
+    #     MUSASHINAKAHARA_SEARCH_SHINJO_URL
+    # ]
+    start_urls = [MUSASHINAKAHARA_SEARCH_KOSUGI_URL]
 
     def __init__(self):
         options = ChromeOptions()
@@ -95,10 +103,9 @@ class FeedSpider(scrapy.Spider):
                                  address_info).replace(",", "").strip()
 
         shop["url"] = response.url.strip().split("?/promo=")[0]
-        shop["detail_url"] = BASE_URL + response.xpath("//p/a/@href").get()
+        detail_url = BASE_URL + response.xpath("//p/a/@href").get()
 
-        request = scrapy.Request(shop['detail_url'],
-                                 callback=self.parse_shop_detail)
+        request = scrapy.Request(detail_url, callback=self.parse_shop_detail)
         request.meta['shop'] = shop
         yield request
 
