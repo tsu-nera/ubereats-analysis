@@ -17,7 +17,7 @@ class FeedSpider(scrapy.Spider):
     def __init__(self):
         options = ChromeOptions()
 
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -31,30 +31,34 @@ class FeedSpider(scrapy.Spider):
         print("Parsing...\n")
 
         self.driver.get(response.url)
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "article.af")))
 
         res = response.replace(
             body=self.driver.page_source)  # レスポンスオブジェクトのHTMLをseleniumのものと差し替える
 
-        # for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
-        #     full_url = BASE_URL + href
+        for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
+            full_url = BASE_URL + href
 
-        #     yield scrapy.Request(full_url, callback=self.parse_item)
+            yield scrapy.Request(full_url, callback=self.parse_shop)
 
-        href = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')[0]
-        full_url = BASE_URL + href
-        yield scrapy.Request(full_url, callback=self.parse_shop)
+        # 1つの店舗を試したいときのデバッグ用
+        # href = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')[0]
+        # full_url = BASE_URL + href
+        # yield scrapy.Request(full_url, callback=self.parse_shop)
 
     def parse_shop(self, response):
 
         shop = ShopItem()
 
         shop["name"] = response.css("h1::text").get().strip()
-        shop["point"] = float(response.css("span::text")[0].get().strip())
-        shop["reviews"] = int(
-            response.css("span::text")[2].extract().strip().strip("(").strip(
-                ")"))
+        point = response.css("span::text")[0].get().strip()
+
+        if point != '•':
+            shop["point"] = float(point)
+            shop["reviews"] = int(
+                response.css("span::text")[2].get().strip().strip("(").strip(
+                    ")").strip("+"))
         address_info = response.css("p::text")[1].get().strip().split(",")
         shop["postal_code"] = address_info[1].strip().strip("-")
         shop["address"] = address_info[0].strip()
@@ -70,7 +74,7 @@ class FeedSpider(scrapy.Spider):
         shop = response.meta['shop']
 
         self.driver.get(response.url)
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.XPATH, "//figure/img")))
         res = response.replace(body=self.driver.page_source)
 
