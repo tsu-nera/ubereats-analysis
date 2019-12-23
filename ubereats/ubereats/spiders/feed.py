@@ -29,7 +29,6 @@ class FeedSpider(scrapy.Spider):
         self.driver = Chrome(options=options)
 
     def parse(self, response):
-        print("Parsing...\n")
 
         self.driver.get(response.url)
         WebDriverWait(self.driver, 30).until(
@@ -69,7 +68,7 @@ class FeedSpider(scrapy.Spider):
             shop["postal_code"] = postal_code[0]
 
         shop["address"] = re.sub(postal_code_pattern, "",
-                                 address_info).replace(",", "")
+                                 address_info).replace(",", "").strip()
 
         shop["url"] = response.url.strip()
         shop["detail_url"] = BASE_URL + response.xpath("//p/a/@href").get()
