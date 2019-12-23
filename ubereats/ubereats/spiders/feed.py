@@ -90,15 +90,14 @@ class FeedSpider(scrapy.Spider):
         postal_code = re.findall(postal_code_pattern, address_info)
         if len(postal_code) != 0:
             shop["postal_code"] = postal_code[0]
-
+n
         shop["address"] = re.sub(postal_code_pattern, "",
                                  address_info).replace(",", "").strip()
 
         shop["url"] = response.url.strip().split("?/promo=")[0]
-        shop["detail_url"] = BASE_URL + response.xpath("//p/a/@href").get()
+        detail_url = BASE_URL + response.xpath("//p/a/@href").get()
 
-        request = scrapy.Request(shop['detail_url'],
-                                 callback=self.parse_shop_detail)
+        request = scrapy.Request(detail_url, callback=self.parse_shop_detail)
         request.meta['shop'] = shop
         yield request
 
