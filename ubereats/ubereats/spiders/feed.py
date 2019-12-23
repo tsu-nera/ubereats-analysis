@@ -19,7 +19,7 @@ class FeedSpider(scrapy.Spider):
     def __init__(self):
         options = ChromeOptions()
 
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -41,16 +41,19 @@ class FeedSpider(scrapy.Spider):
         shop_hrefs = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')
         loaded_count = len(shop_hrefs)
 
-        while loaded_count != pre_loaded_count:
-            pre_loaded_count = loaded_count
+        while loaded_count > pre_loaded_count:
+            print("preloaded count:" + str(pre_loaded_count) +
+                  "/loaded count:" + str(loaded_count))
 
-            # for href in shop_hrefs[pre_loaded_count:]:
-            #     full_url = BASE_URL + href
+            for href in shop_hrefs[pre_loaded_count:]:
+                full_url = BASE_URL + href
 
-            #     yield scrapy.Request(full_url, callback=self.parse_shop)
+                yield scrapy.Request(full_url, callback=self.parse_shop)
 
-            self.driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);")
+            # ブラウザ有効のときはこれをコメントアウトすると下にスクロールする。
+            # headlessのときはエラーするので注意
+            # self.driver.execute_script(
+            #     "window.scrollTo(0, document.body.scrollHeight);")
 
             buttons = self.driver.find_elements_by_xpath(
                 "//button[contains(text(), 'さらに表示')]")
@@ -59,6 +62,8 @@ class FeedSpider(scrapy.Spider):
                 button.click()
 
             time.sleep(5)
+
+            pre_loaded_count = loaded_count
 
             res = response.replace(body=self.driver.page_source)
             shop_hrefs = res.xpath("//a/@href").re(
