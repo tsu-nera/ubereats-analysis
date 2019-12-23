@@ -1,7 +1,6 @@
 UberEats Analysis
 ===
 
-![](https://img.shields.io/github/license/tsu-nera/ubereats-analysis.svg)
 [![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/tsu-nera/ubereats-analysis)
 
 
