@@ -31,28 +31,59 @@ class FeedSpider(scrapy.Spider):
         print("Parsing...\n")
 
         self.driver.get(response.url)
-
         WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "article.af")))
 
         res = response.replace(
             body=self.driver.page_source)  # レスポンスオブジェクトのHTMLをseleniumのものと差し替える
 
-        for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
-            full_url = BASE_URL + href
+        # for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
+        #     full_url = BASE_URL + href
 
-            yield scrapy.Request(full_url, callback=self.parse_item)
+        #     yield scrapy.Request(full_url, callback=self.parse_item)
 
-        self.driver.close()
+        href = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')[0]
+        full_url = BASE_URL + href
+        yield scrapy.Request(full_url, callback=self.parse_shop)
 
-    def parse_item(self, response):
+    def parse_shop(self, response):
 
         shop = ShopItem()
-        shop["detail_url"] = response.url
+
+        shop["name"] = response.css("h1::text").get().strip()
+        shop["point"] = float(response.css("span::text")[0].get().strip())
+        shop["reviews"] = int(
+            response.css("span::text")[2].extract().strip().strip("(").strip(
+                ")"))
+        address_info = response.css("p::text")[1].get().strip().split(",")
+        shop["postal_code"] = address_info[1].strip().strip("-")
+        shop["address"] = address_info[0].strip()
+        shop["url"] = response.url.strip()
+        shop["detail_url"] = BASE_URL + response.xpath("//p/a/@href").get()
+
+        request = scrapy.Request(shop['detail_url'],
+                                 callback=self.parse_shop_detail)
+        request.meta['shop'] = shop
+        yield request
+
+    def parse_shop_detail(self, response):
+        shop = response.meta['shop']
+
+        self.driver.get(response.url)
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//figure/img")))
+        res = response.replace(body=self.driver.page_source)
+
+        map_url = [
+            s for s in res.css("img").xpath("@src").getall()
+            if "maps.googleapis.com" in s
+        ][0]
+        map_info = map_url.split("center=")[1].split("&zoom=")[0].split("%2C")
+
+        shop["latitude"] = map_info[0]
+        shop["longitude"] = map_info[1]
 
         yield shop
 
-        # article = response.css("article.af")[0]
-        # shop["name"] = article.css("div")[6].css("div::text").extract()
-
-        # yield shop
+    def closed(self, reason):
+        self.driver.close()
