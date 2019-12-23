@@ -1,4 +1,5 @@
 import scrapy
+import re
 
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -59,9 +60,17 @@ class FeedSpider(scrapy.Spider):
             shop["reviews"] = int(
                 response.css("span::text")[2].get().strip().strip("(").strip(
                     ")").strip("+"))
-        address_info = response.css("p::text")[1].get().strip().split(",")
-        shop["postal_code"] = address_info[1].strip().strip("-")
-        shop["address"] = address_info[0].strip()
+
+        address_info = response.css("p::text")[1].get().strip()
+        postal_code_pattern = "[0-9]{3}-?[0-9]{4}"
+
+        postal_code = re.findall(postal_code_pattern, address_info)
+        if len(postal_code) != 0:
+            shop["postal_code"] = postal_code[0]
+
+        shop["address"] = re.sub(postal_code_pattern, "",
+                                 address_info).replace(",", "")
+
         shop["url"] = response.url.strip()
         shop["detail_url"] = BASE_URL + response.xpath("//p/a/@href").get()
 
