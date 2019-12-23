@@ -83,6 +83,13 @@ class FeedSpider(scrapy.Spider):
         shop["latitude"] = map_info[0]
         shop["longitude"] = map_info[1]
 
+        hour_list = [
+            s for s in res.css("tbody>tr>td::text").getall() if ":" in s
+        ]
+
+        shop["open_hour"] = hour_list[0]
+        shop["close_hour"] = hour_list[-1]
+
         yield shop
 
     def closed(self, reason):
