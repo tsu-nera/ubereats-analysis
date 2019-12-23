@@ -83,7 +83,7 @@ class FeedSpider(scrapy.Spider):
                 response.css("span::text")[2].get().strip().strip("(").strip(
                     ")").strip("+"))
 
-        address_info = response.css("p::text")[1].get().strip()
+        address_info = response.css("p::text")[-1].get().strip()
         postal_code_pattern = "[0-9]{3}-?[0-9]{4}"
 
         postal_code = re.findall(postal_code_pattern, address_info)
@@ -105,7 +105,7 @@ class FeedSpider(scrapy.Spider):
         shop = response.meta['shop']
 
         self.driver.get(response.url)
-        WebDriverWait(self.driver, 30).until(
+        WebDriverWait(self.driver, 60).until(
             EC.presence_of_element_located((By.XPATH, "//figure/img")))
         res = response.replace(body=self.driver.page_source)
 
