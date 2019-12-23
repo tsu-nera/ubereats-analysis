@@ -8,7 +8,6 @@ class ShopItem(scrapy.Item):
     postal_code = scrapy.Field()  # 郵便番号
     address = scrapy.Field()  # 住所
     url = scrapy.Field()  # 店舗URL
-    detail_url = scrapy.Field()  # 店舗詳細URL
     latitude = scrapy.Field()  # 緯度
     longitude = scrapy.Field()  # 経度
     open_hour = scrapy.Field()  # 開始時間
