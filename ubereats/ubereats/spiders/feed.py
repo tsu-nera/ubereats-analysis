@@ -90,7 +90,7 @@ class FeedSpider(scrapy.Spider):
         postal_code = re.findall(postal_code_pattern, address_info)
         if len(postal_code) != 0:
             shop["postal_code"] = postal_code[0]
-n
+
         shop["address"] = re.sub(postal_code_pattern, "",
                                  address_info).replace(",", "").strip()
 
