@@ -1,10 +1,12 @@
 import scrapy
 import re
+import time
 
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from ..items import ShopItem
 from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
@@ -32,20 +34,42 @@ class FeedSpider(scrapy.Spider):
 
         self.driver.get(response.url)
         WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "article.af")))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "article.af")))
 
-        res = response.replace(
-            body=self.driver.page_source)  # レスポンスオブジェクトのHTMLをseleniumのものと差し替える
+        pre_loaded_count = 0
 
-        for href in res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)'):
-            full_url = BASE_URL + href
+        res = response.replace(body=self.driver.page_source)
+        shop_hrefs = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')
+        loaded_count = len(shop_hrefs)
 
-            yield scrapy.Request(full_url, callback=self.parse_shop)
+        while loaded_count > pre_loaded_count:
+            print("preloaded count:" + str(pre_loaded_count) +
+                  "/loaded count:" + str(loaded_count))
 
-        # 1つの店舗を試したいときのデバッグ用
-        # href = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')[0]
-        # full_url = BASE_URL + href
-        # yield scrapy.Request(full_url, callback=self.parse_shop)
+            for href in shop_hrefs[pre_loaded_count:]:
+                full_url = BASE_URL + href
+
+                yield scrapy.Request(full_url, callback=self.parse_shop)
+
+            # ブラウザ有効のときはこれをコメントアウトすると下にスクロールする。
+            # headlessのときはエラーするので注意
+            # self.driver.execute_script(
+            #     "window.scrollTo(0, document.body.scrollHeight);")
+
+            buttons = self.driver.find_elements_by_xpath(
+                "//button[contains(text(), 'さらに表示')]")
+
+            for button in buttons:
+                button.click()
+
+            time.sleep(5)
+
+            pre_loaded_count = loaded_count
+
+            res = response.replace(body=self.driver.page_source)
+            shop_hrefs = res.xpath("//a/@href").re(
+                '(/ja-JP/.*/food-delivery/.*)')
+            loaded_count = len(shop_hrefs)
 
     def parse_shop(self, response):
 
@@ -60,7 +84,7 @@ class FeedSpider(scrapy.Spider):
                 response.css("span::text")[2].get().strip().strip("(").strip(
                     ")").strip("+"))
 
-        address_info = response.css("p::text")[1].get().strip()
+        address_info = response.css("p::text")[-1].get().strip()
         postal_code_pattern = "[0-9]{3}-?[0-9]{4}"
 
         postal_code = re.findall(postal_code_pattern, address_info)
@@ -81,10 +105,18 @@ class FeedSpider(scrapy.Spider):
     def parse_shop_detail(self, response):
         shop = response.meta['shop']
 
-        self.driver.get(response.url)
-        WebDriverWait(self.driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, "//figure/img")))
-        res = response.replace(body=self.driver.page_source)
+        for _ in range(3):  # 最大3回実行
+            try:
+                self.driver.get(response.url)
+                WebDriverWait(self.driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, "//figure/img")))
+                res = response.replace(body=self.driver.page_source)
+            except TimeoutException:
+                pass
+            else:
+                break  # 失敗しなかった時はループを抜ける
+        else:
+            raise (TimeoutException())  # リトライが全部失敗した時の処理
 
         map_url = [
             s for s in res.css("img").xpath("@src").getall()
