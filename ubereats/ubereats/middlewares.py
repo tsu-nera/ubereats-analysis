@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from scrapy import signals
 
 from scrapy.http import HtmlResponse
