@@ -6,6 +6,7 @@ from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from ..items import ShopItem
 from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
@@ -104,10 +105,18 @@ class FeedSpider(scrapy.Spider):
     def parse_shop_detail(self, response):
         shop = response.meta['shop']
 
-        self.driver.get(response.url)
-        WebDriverWait(self.driver, 60).until(
-            EC.presence_of_element_located((By.XPATH, "//figure/img")))
-        res = response.replace(body=self.driver.page_source)
+        for _ in range(3):  # 最大3回実行
+            try:
+                self.driver.get(response.url)
+                WebDriverWait(self.driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, "//figure/img")))
+                res = response.replace(body=self.driver.page_source)
+            except TimeoutException:
+                pass
+            else:
+                break  # 失敗しなかった時はループを抜ける
+        else:
+            raise (TimeoutException())  # リトライが全部失敗した時の処理
 
         map_url = [
             s for s in res.css("img").xpath("@src").getall()
