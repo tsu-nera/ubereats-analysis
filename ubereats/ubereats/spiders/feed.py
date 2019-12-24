@@ -103,7 +103,8 @@ class FeedSpider(scrapy.Spider):
         shop["address"] = re.sub(postal_code_pattern, "",
                                  address_info).replace(",", "").strip()
 
-        shop["url"] = response.url.strip().split("?/promo=")[0]
+        shop["url"] = response.url.strip().split("?promo=")[0]
+        shop["id"] = shop["url"].split("/")[-2]
         detail_url = BASE_URL + response.xpath("//p/a/@href").get()
 
         request = scrapy.Request(detail_url, callback=self.parse_shop_detail)
