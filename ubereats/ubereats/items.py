@@ -2,6 +2,7 @@ import scrapy
 
 
 class ShopItem(scrapy.Item):
+    id = scrapy.Field()  # id
     name = scrapy.Field()  # 店名
     reviews = scrapy.Field()  # レビュー数
     point = scrapy.Field()  # 5点評価
