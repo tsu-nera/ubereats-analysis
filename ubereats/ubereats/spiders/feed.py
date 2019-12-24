@@ -17,13 +17,14 @@ class FeedSpider(scrapy.Spider):
     name = 'feed'
     allowed_domains = [BASE_DOMAIN]
 
-    # start_urls = [MUSASHINAKAHARA_FEED_URL]
+    start_urls = [MUSASHINAKAHARA_FEED_URL]
+
     # start_urls = [
     #     MUSASHINAKAHARA_SEARCH_KOSUGI_URL,
     #     MUSASHINAKAHARA_SEARCH_NAKAHARA_URL,
     #     MUSASHINAKAHARA_SEARCH_SHINJO_URL
     # ]
-    start_urls = [MUSASHINAKAHARA_SEARCH_KOSUGI_URL]
+    # start_urls = [MUSASHINAKAHARA_SEARCH_KOSUGI_URL]
 
     def __init__(self):
         options = ChromeOptions()
