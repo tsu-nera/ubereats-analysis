@@ -16,5 +16,5 @@ def crawl(c):
 
 @invoke.task
 def post(c):
-    command = "cd ubereats && rm ../rawdata/shop.csv && scrapy crawl post -o ../rawdata/shop.csv"
+    command = "cd ubereats && rm ../rawdata/shop.csv && scrapy crawl post -o ../rawdata/shop.csv" # noqa
     invoke.run(command)

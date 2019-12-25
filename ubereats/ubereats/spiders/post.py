@@ -15,7 +15,7 @@ class PostSpider(scrapy.Spider):
     name = 'post'
     allowed_domains = [BASE_DOMAIN]
 
-    target_url = "https://www.ubereats.com/ja-JP/yokohama/food-delivery/%E3%82%B3%E3%82%B9%E3%82%AD%E3%82%AB%E3%83%AC%E3%83%BC-kosugi-curry/19LVTdEtT4SkHAPNr3PrfQ/"
+    target_url = ""
     start_urls = [target_url]
 
     def __init__(self):
