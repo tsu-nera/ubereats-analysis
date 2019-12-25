@@ -12,3 +12,9 @@ def crawl(c):
 
     command = "cd ubereats && scrapy crawl feed -o ../" + data_path  # noqa
     invoke.run(command)
+
+
+@invoke.task
+def post(c):
+    command = "cd ubereats && rm ../rawdata/shop.csv && scrapy crawl post -o ../rawdata/shop.csv"
+    invoke.run(command)
