@@ -18,3 +18,14 @@ def crawl(c):
 def post(c):
     command = "cd ubereats && rm ../rawdata/shop.csv && scrapy crawl shop -o ../rawdata/shop.csv"  # noqa
     invoke.run(command)
+
+
+@invoke.task
+def trip(c):
+    data_dir = "rawdata"
+    now = datetime.now()
+    data_file = now.strftime('%y%m%d_%H%M%S') + "_trips.csv"
+    data_path = data_dir + "/" + data_file
+
+    command = "cd ubereats && scrapy crawl trip -o ../" + data_path  # noqa
+    invoke.run(command)
