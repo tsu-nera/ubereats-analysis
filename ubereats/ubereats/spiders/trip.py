@@ -17,7 +17,7 @@ class TripSpider(scrapy.Spider):
     name = 'trip'
     allowed_domains = [BASE_DOMAIN]
 
-    def __init__(self, year=2019, month=1, day=1, *args, **kwargs):
+    def __init__(self, year=2020, month=1, day=1, *args, **kwargs):
         super(TripSpider, self).__init__(*args, **kwargs)
 
         self.year = year
@@ -110,9 +110,6 @@ class TripSpider(scrapy.Spider):
             trip["pickup_time"] = drive_info[0].split(
                 ":")[0] + ":" + drive_info[0].split(":")[1]
             trip["pickup_address"] = drive_info[1]
-            trip["drop_time"] = drive_info[2].split(
-                ":")[0] + ":" + drive_info[2].split(":")[1]
-            trip["drop_address"] = drive_info[3]
 
             trip["price"] = int(res.css("h1::text").extract()[0].strip("￥"))
 
@@ -121,10 +118,15 @@ class TripSpider(scrapy.Spider):
                 "&path=color")[0].split("&markers=")[0].split("%2C")
             trip["pickup_latitude"] = pickup_info[0]
             trip["pickup_longitude"] = pickup_info[1]
-            drop_info = img_url.split("dropoff.png%7Cscale%3A2%7C")[1].split(
-                "&path=color")[0].split("%2C")
-            trip["drop_latitude"] = drop_info[0]
-            trip["drop_longitude"] = drop_info[1]
+
+            # 顧客情報漏洩はダメ、ぜったい！
+            # drop_info = img_url.split("dropoff.png%7Cscale%3A2%7C")[1].split(
+            #     "&path=color")[0].split("%2C")
+            # trip["drop_latitude"] = drop_info[0]
+            # trip["drop_longitude"] = drop_info[1]
+            trip["drop_time"] = drive_info[2].split(
+                ":")[0] + ":" + drive_info[2].split(":")[1]
+            # trip["drop_address"] = drive_info[3]
 
             trip["url"] = ref
 
