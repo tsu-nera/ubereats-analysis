@@ -1,5 +1,8 @@
 import scrapy
 
+from time import sleep
+from pit import Pit
+
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -37,15 +40,28 @@ class TripSpider(scrapy.Spider):
 
     def parse(self, response):
 
+        # Login
         self.driver.get(response.url)
+
+        # reCaptureが動いたときは手動で突破する
+        # sleep(30)
+        # reCaptureが動かないときは自動で
+        pit = Pit.get("uber_auth")
+        self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
+        self.driver.find_elements_by_class_name("btn")[0].click()
+        sleep(1)
+        self.driver.find_element_by_id("password").send_keys(pit['password'])
+        self.driver.find_elements_by_class_name("btn")[0].click()
         WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "tbody")))
 
         res = response.replace(body=self.driver.page_source)
         shop_hrefs = res.xpath("//a/@href").re('(/p3/payments/trips/.*)')
 
+        refs_set = set()
         for href in shop_hrefs:
-            full_url = BASE_URL + href
+            refs_set.add(BASE_URL + href.strip("?showBackLink=1"))
 
+        for refs in refs_set:
             # yield scrapy.Request(full_url, callback=self.parse_shop)
-            print(full_url)
+            print(refs)
