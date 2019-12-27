@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+from ..items.trip import TripItem
 from ..constants.trip import BASE_DOMAIN, BASE_URL, WEEKLY_EARNINGS_BASE_URL
 
 
@@ -45,6 +46,7 @@ class TripSpider(scrapy.Spider):
 
         # reCaptureが動いたときは手動で突破する
         # sleep(30)
+
         # reCaptureが動かないときは自動で
         pit = Pit.get("uber_auth")
         self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
@@ -62,6 +64,16 @@ class TripSpider(scrapy.Spider):
         for href in shop_hrefs:
             refs_set.add(BASE_URL + href.strip("?showBackLink=1"))
 
-        for refs in refs_set:
-            # yield scrapy.Request(full_url, callback=self.parse_shop)
-            print(refs)
+        for ref in refs_set:
+            self.driver.get(ref)
+            sleep(1)
+            res = response.replace(body=self.driver.page_source)
+
+            trip = TripItem()
+
+            trip["id"] = ref.split("/")[-1]
+
+            yield trip
+
+    def closed(self, reason):
+        self.driver.close()
