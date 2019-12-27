@@ -16,13 +16,8 @@ See more detail at [env.yaml](https://github.com/tsu-nera/ubereats-analysis/blob
 
 ## データ分析(EDA)
 
-### 店舗データ分析
-
-https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/shop_analysis.ipynb
-
-### 配達データ分析
-
-https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/trip_analysis.ipynb
+- [店舗データ分析](https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/shop_analysis.ipynb)
+- [配達データ分析](https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/trip_analysis.ipynb)
 
 ## 武蔵中原ウーバーマップ
 
