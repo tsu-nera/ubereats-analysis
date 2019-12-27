@@ -10,7 +10,7 @@ UberEats Analysis
 
 ## データ分析(EDA)
 
-https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/data_analysis.ipynb
+https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/shop_analysis.ipynb
 
 ## Google マイマップ
 
