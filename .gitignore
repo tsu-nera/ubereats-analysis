@@ -1,2 +1,5 @@
-rawdata/trips
 tmp
+rawdata/trips
+
+# スクレイピングした顧客情報は絶対に公開しちゃだめ！個人情報漏洩はダメ！
+data/trip_master.csv 
