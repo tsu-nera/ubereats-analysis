@@ -8,16 +8,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-from ..items import ShopItem
-from ..constants import MUSASHINAKAHARA_FEED_URL, BASE_DOMAIN, BASE_URL  # noqa
-from ..constants import MUSASHINAKAHARA_SEARCH_NAKAHARA_URL, MUSASHINAKAHARA_SEARCH_KOSUGI_URL, MUSASHINAKAHARA_SEARCH_SHINJO_URL  # noqa
+from ..items.shop import ShopItem
+from ..constants.shop import MUSASHINAKAHARA_SHOP_URL, BASE_DOMAIN, BASE_URL  # noqa
+from ..constants.shop import MUSASHINAKAHARA_SEARCH_NAKAHARA_URL, MUSASHINAKAHARA_SEARCH_KOSUGI_URL, MUSASHINAKAHARA_SEARCH_SHINJO_URL  # noqa
 
 
-class FeedSpider(scrapy.Spider):
-    name = 'feed'
+class ShopSpider(scrapy.Spider):
+    name = 'shop'
     allowed_domains = [BASE_DOMAIN]
 
-    start_urls = [MUSASHINAKAHARA_FEED_URL]
+    start_urls = [MUSASHINAKAHARA_SHOP_URL]
 
     # start_urls = [
     #     MUSASHINAKAHARA_SEARCH_KOSUGI_URL,
@@ -29,7 +29,7 @@ class FeedSpider(scrapy.Spider):
     def __init__(self):
         options = ChromeOptions()
 
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
