@@ -1,3 +1,6 @@
 tmp
 rawdata/trips
 rawdata/eats
+
+# 配送情報は個人情報も含まれるためGitHubにはアップロードしないでおく
+data/trip_master.csv
