@@ -4,7 +4,8 @@
 
 - Python 3.7
 - Scrapy 1.8
-- [See more details at env.yaml(anaconda config file)](https://github.com/tsu-nera/ubereats-analysis/blob/master/env.yaml)
+
+See more detail at [env.yaml](https://github.com/tsu-nera/ubereats-analysis/blob/master/env.yaml)(anaconda config file)
 
 ## 概要
 
@@ -15,7 +16,13 @@
 
 ## データ分析(EDA)
 
+### 店舗データ分析
+
 https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/shop_analysis.ipynb
+
+### 配達データ分析
+
+https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/trip_analysis.ipynb
 
 ## 武蔵中原ウーバーマップ
 
@@ -64,7 +71,7 @@ uber_auth:
   password: [xxx]
 ```
 
-日付を引数として渡して、以下でスクリプトを走らせる。 `rawdata/trips`配下にCSVとして出力される。
+日付を引数として渡して、以下でスクリプトを走らせる。 `rawdata/trips`配下に CSV として出力される。
 
 ```
 $ inv trip [year] [month] [day]
@@ -72,16 +79,16 @@ $ inv trip [year] [month] [day]
 
 主な取得項目は、以下のとおり。
 
-* 日時
-* 曜日
-* 時間
-* 距離
-* ピックアップ時刻
-* ピックアップ場所
-* 到着時刻
-* 支払い額
+- 日時
+- 曜日
+- 時間
+- 距離
+- ピックアップ時刻
+- ピックアップ場所
+- 到着時刻
+- 支払い額
 
-公開情報以外は、GitHub にデータをアップロードしてはいけない。特にドロップ先の情報は絶対にGitHub にアップロードしてはいけない。
+公開情報以外は、GitHub にデータをアップロードしてはいけない。特にドロップ先の情報は絶対に GitHub にアップロードしてはいけない。
 
 ## Authors
 
