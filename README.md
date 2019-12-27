@@ -31,7 +31,6 @@ https://drive.google.com/open?id=1Lt-zlVv4_A1y5v58Efbh9AsFg5Gw8X9q&usp=sharing
 
 ```
 $ inv crawl
-
 ```
 
 主な取得項目は、以下のとおり。
@@ -69,7 +68,6 @@ uber_auth:
 
 ```
 $ inv trip [year] [month] [day]
-
 ```
 
 主な取得項目は、以下のとおり。
