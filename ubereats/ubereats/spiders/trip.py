@@ -86,7 +86,8 @@ class TripSpider(scrapy.Spider):
             drive_time_seconds = int(
                 res.css("h4::text").extract()[0].split("分")[1].strip(
                     "秒").strip())  # noqa
-            trip["drive_time"] = drive_time_minutes + drive_time_seconds / 60
+            trip["drive_time"] = round(
+                drive_time_minutes + drive_time_seconds / 60, 1)
             trip["distance"] = float(
                 res.css("h4::text").extract()[1].strip("km").strip())
 
@@ -101,19 +102,17 @@ class TripSpider(scrapy.Spider):
                 ":")[0] + ":" + drive_info[2].split(":")[1]
             trip["drop_address"] = drive_info[3]
 
-            trip["price"] = res.css(
-                "div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
-            ).extract()[2].strip("￥")
+            trip["price"] = int(res.css("h1::text").extract()[0].strip("￥"))
 
             img_url = res.css("img")[1].xpath("@src").extract()[0]
             pickup_info = img_url.split("pickup.png%7Cscale%3A2%7C")[1].split(
-                "&path=color")[0].split("%2C")
+                "&path=color")[0].split("&markers=")[0].split("%2C")
             trip["pickup_latitude"] = pickup_info[0]
-            trip["pickup_logitude"] = pickup_info[1]
+            trip["pickup_longitude"] = pickup_info[1]
             drop_info = img_url.split("dropoff.png%7Cscale%3A2%7C")[1].split(
                 "&path=color")[0].split("%2C")
             trip["drop_latitude"] = drop_info[0]
-            trip["drop_logitude"] = drop_info[1]
+            trip["drop_longitude"] = drop_info[1]
 
             yield trip
 
