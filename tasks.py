@@ -31,3 +31,9 @@ def trip(c, year, month, day):
     command = "cd ubereats && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(
         year, month, day, data_path)  # noqa
     invoke.run(command)
+
+
+@invoke.task
+def shell(c):
+    command = "scrapy shell file://$PWD/tmp/target.html"
+    invoke.run(command)
