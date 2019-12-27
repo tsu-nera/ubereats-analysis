@@ -17,16 +17,18 @@ class TripSpider(scrapy.Spider):
     name = 'trip'
     allowed_domains = [BASE_DOMAIN]
 
-    year = 2019
-    month = 12
-    day = 26
+    def __init__(self, year=2019, month=1, day=1, *args, **kwargs):
+        super(TripSpider, self).__init__(*args, **kwargs)
 
-    DAILY_EARNINGS_URL = WEEKLY_EARNINGS_BASE_URL + "/" + str(
-        year) + "/" + str(month) + "/" + str(day)  # noqa
+        self.year = year
+        self.month = month
+        self.day = day
 
-    start_urls = [DAILY_EARNINGS_URL]
+        DAILY_EARNINGS_URL = WEEKLY_EARNINGS_BASE_URL + "/" + str(
+            year) + "/" + str(month) + "/" + str(day)  # noqa
 
-    def __init__(self):
+        self.start_urls = [DAILY_EARNINGS_URL]
+
         options = ChromeOptions()
 
         # options.add_argument("--headless")
@@ -62,13 +64,23 @@ class TripSpider(scrapy.Spider):
 
         refs_set = set()
         for href in shop_hrefs:
-            refs_set.add(BASE_URL + href)
+            refs_set.add(BASE_URL + href.split("?showBackLink")[0])
 
         for ref in refs_set:
-            self.driver.get(ref)
-            WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "img.af")))
-            res = response.replace(body=self.driver.page_source)
+
+            for _ in range(3):  # 最大3回実行
+                try:
+                    self.driver.get(ref)
+                    WebDriverWait(self.driver, 10).until(
+                        EC.presence_of_element_located(
+                            (By.CSS_SELECTOR, "img.af")))
+                    res = response.replace(body=self.driver.page_source)
+                except TimeoutException:
+                    pass
+                else:
+                    break  # 失敗しなかった時はループを抜ける
+            else:
+                raise (TimeoutException())  # リトライが全部失敗した時の処理
 
             trip = TripItem()
 
@@ -113,6 +125,8 @@ class TripSpider(scrapy.Spider):
                 "&path=color")[0].split("%2C")
             trip["drop_latitude"] = drop_info[0]
             trip["drop_longitude"] = drop_info[1]
+
+            trip["url"] = ref
 
             yield trip
 

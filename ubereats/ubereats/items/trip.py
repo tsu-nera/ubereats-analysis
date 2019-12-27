@@ -19,3 +19,4 @@ class TripItem(scrapy.Item):
     drop_latitude = scrapy.Field()  # ドロップ緯度
     drop_longitude = scrapy.Field()  # ドロップ経度
     price = scrapy.Field()  # 支払い額
+    url = scrapy.Field() # URL
