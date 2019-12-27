@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-from ..items import ShopItem
-from ..constants import BASE_URL, BASE_DOMAIN  # noqa
+from ..items.shop import ShopItem
+from ..constants.shop import BASE_URL, BASE_DOMAIN  # noqa
 
 
 class PostSpider(scrapy.Spider):
