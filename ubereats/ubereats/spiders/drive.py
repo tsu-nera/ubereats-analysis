@@ -1,6 +1,6 @@
 import scrapy
 
-from ..constants_drive import BASE_DOMAIN, WEEKLY_EARNINGS_BASE_URL
+from ..constants.drive import BASE_DOMAIN, WEEKLY_EARNINGS_BASE_URL
 
 
 class DriveSpider(scrapy.Spider):
