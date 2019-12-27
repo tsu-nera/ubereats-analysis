@@ -62,16 +62,58 @@ class TripSpider(scrapy.Spider):
 
         refs_set = set()
         for href in shop_hrefs:
-            refs_set.add(BASE_URL + href.strip("?showBackLink=1"))
+            refs_set.add(BASE_URL + href)
 
         for ref in refs_set:
             self.driver.get(ref)
-            sleep(1)
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "img.af")))
             res = response.replace(body=self.driver.page_source)
 
             trip = TripItem()
 
             trip["id"] = ref.split("/")[-1]
+            trip["year"] = self.year
+            trip["date"] = "{}/{}".format(self.month, self.day)
+            trip["month"] = self.month
+            trip["day"] = self.day
+            trip["day_of_week"] = res.css(
+                "div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
+            ).extract()[2].split(",")[0]
+
+            drive_time_minutes = int(
+                res.css("h4::text").extract()[0].split("分")[0])
+            drive_time_seconds = int(
+                res.css("h4::text").extract()[0].split("分")[1].strip(
+                    "秒").strip())  # noqa
+            trip["drive_time"] = drive_time_minutes + drive_time_seconds / 60
+            trip["distance"] = float(
+                res.css("h4::text").extract()[1].strip("km").strip())
+
+            drive_info = res.css(
+                "div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
+            ).extract()
+
+            trip["pickup_time"] = drive_info[0].split(
+                ":")[0] + ":" + drive_info[0].split(":")[1]
+            trip["pickup_address"] = drive_info[1]
+            trip["drop_time"] = drive_info[2].split(
+                ":")[0] + ":" + drive_info[2].split(":")[1]
+            trip["drop_address"] = drive_info[3]
+
+            trip["price"] = res.css(
+                "div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
+            ).extract()[2].strip("￥")
+
+            img_url = res.css("img")[1].xpath("@src").extract()[0]
+            pickup_info = img_url.split("pickup.png%7Cscale%3A2%7C")[1].split(
+                "&path=color")[0].split("%2C")
+            trip["pickup_latitude"] = pickup_info[0]
+            trip["pickup_logitude"] = pickup_info[1]
+            drop_info = img_url.split("dropoff.png%7Cscale%3A2%7C")[1].split(
+                "&path=color")[0].split("%2C")
+            trip["drop_latitude"] = drop_info[0]
+            trip["drop_logitude"] = drop_info[1]
 
             yield trip
 
