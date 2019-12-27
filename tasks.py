@@ -4,7 +4,7 @@ from datetime import datetime
 
 @invoke.task
 def crawl(c):
-    data_dir = "rawdata/eats"
+    data_dir = "rawdata/shops"
     now = datetime.now()
     data_file = now.strftime('%y%m%d_%H%M%S') + "_musashinakahara.csv"
     # data_file = now.strftime('%y%m%d_%H%M%S') + "_musashikosugi_search.csv"
@@ -16,7 +16,7 @@ def crawl(c):
 
 @invoke.task
 def post(c, url):
-    command = "cd ubereats && rm ../rawdata/eats/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shop.csv".format(
+    command = "cd ubereats && rm ../rawdata/shops/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shops/shop.csv".format(
         url)  # noqa
     invoke.run(command)
 
