@@ -17,3 +17,7 @@ https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/data_analysi
 ### 武蔵中原周辺マップ
 
 https://drive.google.com/open?id=1Lt-zlVv4_A1y5v58Efbh9AsFg5Gw8X9q&usp=sharing
+
+## 注意
+
+公開情報以外は、GitHubにデータをアップロードしてはいけない。認証が必要なページの情報はGitHubにアップロードしてはいけない。
