@@ -15,10 +15,12 @@ class PostSpider(scrapy.Spider):
     name = 'post'
     allowed_domains = [BASE_DOMAIN]
 
-    target_url = ""
-    start_urls = [target_url]
+    def __init__(self, url="", *args, **kwargs):
+        super(PostSpider, self).__init__(*args, **kwargs)
 
-    def __init__(self):
+        self.target_url = url
+        self.start_urls = [self.target_url]
+
         options = ChromeOptions()
 
         options.add_argument("--headless")
