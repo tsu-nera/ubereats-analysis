@@ -6,8 +6,9 @@ from datetime import datetime
 def crawl(c):
     data_dir = "rawdata/shops"
     now = datetime.now()
-    data_file = now.strftime('%y%m%d_%H%M%S') + "_musashinakahara.csv"
+    # data_file = now.strftime('%y%m%d_%H%M%S') + "_musashinakahara.csv"
     # data_file = now.strftime('%y%m%d_%H%M%S') + "_musashikosugi_search.csv"
+    data_file = now.strftime('%y%m%d_%H%M%S') + "_mizonokuchi.csv"
     data_path = data_dir + "/" + data_file
 
     command = "cd ubereats && scrapy crawl shop -o ../" + data_path  # noqa
