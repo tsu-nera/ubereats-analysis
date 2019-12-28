@@ -20,9 +20,13 @@ https://drive.google.com/open?id=1Lt-zlVv4_A1y5v58Efbh9AsFg5Gw8X9q&usp=sharing
 
 ## 分析結果と考察
 
+Jupyter Notebookは以下。
+
 - [店舗データ分析](https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/shop_analysis.ipynb)
 - [配達データ分析](https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/trip_analysis.ipynb)
 - [エリアデータ分析](https://github.com/tsu-nera/ubereats-analysis/blob/master/notebooks/area_analysis.ipynb)
+
+以下は、分析結果からの抜粋。
 
 * 店舗数は、武蔵小杉(新丸子):溝の口(高津):武蔵中原:武蔵新城 = 2:2:1:1 の割合。 
   * 拠点とするならば、武蔵小杉(新丸子)か武蔵溝ノ口(高津)の２択。
@@ -33,10 +37,9 @@ https://drive.google.com/open?id=1Lt-zlVv4_A1y5v58Efbh9AsFg5Gw8X9q&usp=sharing
 * 中原区と高津区では、中原区の方が高津区よりも人口密度と店舗密度が高い。 
   * 中原区の方が高津区よりも移動距離が短くて楽になる可能性が高い。
 
+### まとめ
 武蔵小杉を拠点にすると、優良店も多く移動距離も少ない。
 一方、溝の口を拠点にすると、チェーン店の数が多く新城や中原までの広範囲への稼働も可能。
-
-### まとめ
 
 体力がありがっつり頑張って稼ぎたいときは、溝の口を拠点にする。
 体力消費を抑えつつ、安定して稼ぎたいときは武蔵小杉を拠点にする。
