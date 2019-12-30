@@ -114,10 +114,16 @@ class TripSpider(scrapy.Spider):
             trip["price"] = int(res.css("h1::text").extract()[0].strip("￥"))
 
             img_url = res.css("img")[1].xpath("@src").extract()[0]
-            pickup_info = img_url.split("pickup.png%7Cscale%3A2%7C")[1].split(
-                "&path=color")[0].split("&markers=")[0].split("%2C")
-            trip["pickup_latitude"] = pickup_info[0]
-            trip["pickup_longitude"] = pickup_info[1]
+            
+            try:
+                pickup_info = img_url.split("pickup.png%7Cscale%3A2%7C")[1].split(
+                    "&path=color")[0].split("&markers=")[0].split("%2C")
+                trip["pickup_latitude"] = pickup_info[0]
+                trip["pickup_longitude"] = pickup_info[1]
+            except Exception as e:
+                # アプリで住所が空白の場合はpickup情報が取得できないので、
+                # メッセージだけ表示して無視
+                print(e)
 
             # 顧客情報漏洩はダメ、ぜったい！
             # drop_info = img_url.split("dropoff.png%7Cscale%3A2%7C")[1].split(

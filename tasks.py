@@ -26,11 +26,18 @@ def post(c, url):
 def trip(c, year, month, day):
     data_dir = "rawdata/trips"
     now = datetime.now()
-    data_file = now.strftime('%y%m%d_%H%M%S') + "_trips.csv"
+    # data_file = now.strftime('%y%m%d_%H%M%S') + "_trips.csv"
+    data_file = "latest_trips.csv"
     data_path = data_dir + "/" + data_file
 
     command = "cd ubereats && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(
         year, month, day, data_path)  # noqa
+    invoke.run(command)
+
+
+@invoke.task
+def merge_trip(c):
+    command = "python merge_trip.py"
     invoke.run(command)
 
 
