@@ -30,8 +30,8 @@ def trip(c, year, month, day):
     data_file = "latest_trips.csv"
     data_path = data_dir + "/" + data_file
 
-    command = "cd ubereats && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(
-        year, month, day, data_path)  # noqa
+    command = "cd ubereats && rm ../{} -f && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(
+        data_path, year, month, day, data_path)  # noqa
     invoke.run(command)
 
 

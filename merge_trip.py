@@ -8,4 +8,4 @@ df = pd.read_csv(TARGET_FILE_PATH, index_col="id")
 
 data = pd.concat([master, df], sort=True).drop_duplicates(subset="url")
 
-data.to_csv(MASTER_FILE_PATH, index=True)
+data.to_csv(MASTER_FILE_PATH, index=True, mode="w")
