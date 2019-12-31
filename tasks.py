@@ -86,6 +86,12 @@ def merge_trip(c):
 
 
 @invoke.task
+def merge_shop(c):
+    command = "python merge_shop.py"
+    invoke.run(command)
+
+
+@invoke.task
 def shell(c):
     command = "scrapy shell file://$PWD/tmp/target.html"
     invoke.run(command)
