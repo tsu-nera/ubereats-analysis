@@ -25,28 +25,28 @@ def get_crawl_comand(base_file_name, station_type):
 
 
 @invoke.task
-def crawl_musashinakahara(c):
+def crawl_nakahara(c):
     base_file_name = "musashinakahara.csv"
     command = get_crawl_comand(base_file_name, STATION_TYPE_NAKAHARA)
     invoke.run(command)
 
 
 @invoke.task
-def crawl_musashishinjo(c):
+def crawl_shinjo(c):
     base_file_name = "musashishinjo.csv"
     command = get_crawl_comand(base_file_name, STATION_TYPE_SHINJO)
     invoke.run(command)
 
 
 @invoke.task
-def crawl_musashikosugi(c):
+def crawl_kosugi(c):
     base_file_name = "musashikosugi.csv"
     command = get_crawl_comand(base_file_name, STATION_TYPE_KOSUGI)
     invoke.run(command)
 
 
 @invoke.task
-def crawl_musashimizonokuchi(c):
+def crawl_mizonokuchi(c):
     base_file_name = "musashimizonokuchi.csv"
     command = get_crawl_comand(base_file_name, STATION_TYPE_MIZONOKUCHI)
     invoke.run(command)

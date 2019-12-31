@@ -39,7 +39,7 @@ class ShopSpider(scrapy.Spider):
         super(ShopSpider, self).__init__(*args, **kwargs)
 
         self.station_type = station_type
-        self.start_urls = station_type[station_type]
+        self.start_urls = STATION_DICT[station_type]
 
         options = ChromeOptions()
 
