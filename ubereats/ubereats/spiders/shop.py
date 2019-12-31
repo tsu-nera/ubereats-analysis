@@ -9,26 +9,38 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from ..items.shop import ShopItem
-from ..constants.shop import MUSASHINAKAHARA_SHOP_URL, BASE_DOMAIN, BASE_URL  # noqa
+from ..constants.shop import BASE_DOMAIN, BASE_URL  # noqa
 from ..constants.shop import MUSASHINAKAHARA_SEARCH_NAKAHARA_URL, MUSASHINAKAHARA_SEARCH_KOSUGI_URL, MUSASHINAKAHARA_SEARCH_SHINJO_URL  # noqa
-from ..constants.shop import MIZONOKUCHI_SHOP_URL
+from ..constants.shop import MUSASHINAKAHARA_SHOP_URL, MIZONOKUCHI_SHOP_URL, MUSASHISHINJO_SHOP_URL, MUSASHIKOSUGI_SHOP_URL  # noqa
+
+STATION_TYPE_NAKAHARA = "MUSASHINAKAHARA"
+STATION_TYPE_SHINJO = "MUSASHISHINJO"
+STATION_TYPE_KOSUGI = "MUSASHIKOSUGI"
+STATION_TYPE_MIZONOKUCHI = "MUSASHIMIZONOKUCHI"
+STATION_TYPE_ALL = "ALL"
+
+STATION_DICT = {
+    STATION_TYPE_NAKAHARA: [MUSASHINAKAHARA_SHOP_URL],
+    STATION_TYPE_KOSUGI: [MUSASHINAKAHARA_SEARCH_KOSUGI_URL],
+    STATION_TYPE_MIZONOKUCHI: [MIZONOKUCHI_SHOP_URL],
+    STATION_TYPE_SHINJO: [MUSASHIKOSUGI_SHOP_URL],
+    STATION_TYPE_ALL: [
+        MUSASHIKOSUGI_SHOP_URL, MUSASHIKOSUGI_SHOP_URL, MUSASHISHINJO_SHOP_URL,
+        MIZONOKUCHI_SHOP_URL
+    ]
+}
 
 
 class ShopSpider(scrapy.Spider):
     name = 'shop'
     allowed_domains = [BASE_DOMAIN]
 
-    # start_urls = [MUSASHINAKAHARA_SHOP_URL]
-    start_urls = [MIZONOKUCHI_SHOP_URL]
+    def __init__(self, station_type=STATION_TYPE_NAKAHARA, *args, **kwargs):
+        super(ShopSpider, self).__init__(*args, **kwargs)
 
-    # start_urls = [
-    #     MUSASHINAKAHARA_SEARCH_KOSUGI_URL,
-    #     MUSASHINAKAHARA_SEARCH_NAKAHARA_URL,
-    #     MUSASHINAKAHARA_SEARCH_SHINJO_URL
-    # ]
-    # start_urls = [MUSASHINAKAHARA_SEARCH_KOSUGI_URL]
+        self.station_type = station_type
+        self.start_urls = station_type[station_type]
 
-    def __init__(self):
         options = ChromeOptions()
 
         options.add_argument("--headless")
