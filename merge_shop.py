@@ -1,8 +1,21 @@
+import sys
 import pandas as pd
+from datetime import datetime
+
+args = sys.argv
 
 MASTER_FILE_PATH = './data/shop_master.csv'
 GOOGLEMAP_FILE_PATH = './data/googlemap.csv'
-TARGET_FILE_PATH = "./rawdata/shops/191231_musashinakahara.csv"
+
+dir_path = "./rawdata/shops/"
+
+if len(args) == 2:
+    file_name = args[1]
+else:
+    file_name_base = "musashinakahara.csv"
+    file_name = datetime.now().strftime('%y%m%d') + "_" + file_name_base
+
+TARGET_FILE_PATH = dir_path + file_name
 
 master = pd.read_csv(MASTER_FILE_PATH, index_col='id')
 df = pd.read_csv(TARGET_FILE_PATH, index_col="id")
