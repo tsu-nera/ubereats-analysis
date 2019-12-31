@@ -20,7 +20,7 @@ def get_crawl_comand(base_file_name, station_type):
     file_name = get_filename_prefix() + "_" + base_file_name
     data_path = RAWDATA_SHOPS_DIR + "/" + file_name
 
-    return "cd ubereats && scrapy crawl shop -a type={} -o ../{}".format(
+    return "cd ubereats && scrapy crawl shop -a station_type={} -o ../{}".format(
         station_type, data_path)
 
 
@@ -55,8 +55,12 @@ def crawl_mizonokuchi(c):
 @invoke.task
 def crawl(c):
     base_file_name = "all_stations.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_ALL)
-    invoke.run(command)
+    command1 = get_crawl_comand(base_file_name, STATION_TYPE_ALL)
+    invoke.run(command1)
+
+    file_name = get_filename_prefix() + "_" + base_file_name
+    command2 = "python merge_shop.py {}".format(file_name)
+    invoke.run(command2)
 
 
 @invoke.task
