@@ -20,7 +20,7 @@ def get_crawl_comand(base_file_name, station_type):
     file_name = get_filename_prefix() + "_" + base_file_name
     data_path = RAWDATA_SHOPS_DIR + "/" + file_name
 
-    return "cd ubereats && scrapy crawl shop -a station_type={} -o ../{}".format(
+    return "cd ubereats && scrapy crawl shop -a station_type={} -o ../{}".format(  # noqa
         station_type, data_path)
 
 
@@ -65,7 +65,7 @@ def crawl(c):
 
 @invoke.task
 def post(c, url):
-    command = "cd ubereats && rm ../rawdata/shops/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shops/shop.csv".format(
+    command = "cd ubereats && rm ../rawdata/shops/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shops/shop.csv".format(  # noqa
         url)  # noqa
     invoke.run(command)
 
@@ -78,7 +78,7 @@ def trip(c, year, month, day):
     data_file = "latest_trips.csv"
     data_path = data_dir + "/" + data_file
 
-    command = "cd ubereats && rm ../{} -f && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(
+    command = "cd ubereats && rm ../{} -f && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(  # noqa
         data_path, year, month, day, data_path)  # noqa
     invoke.run(command)
 
