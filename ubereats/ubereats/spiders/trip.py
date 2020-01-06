@@ -31,7 +31,7 @@ class TripSpider(scrapy.Spider):
 
         options = ChromeOptions()
 
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -114,10 +114,11 @@ class TripSpider(scrapy.Spider):
             trip["price"] = int(res.css("h1::text").extract()[0].strip("￥"))
 
             img_url = res.css("img")[1].xpath("@src").extract()[0]
-            
+
             try:
-                pickup_info = img_url.split("pickup.png%7Cscale%3A2%7C")[1].split(
-                    "&path=color")[0].split("&markers=")[0].split("%2C")
+                pickup_info = img_url.split(
+                    "pickup.png%7Cscale%3A2%7C")[1].split(
+                        "&path=color")[0].split("&markers=")[0].split("%2C")
                 trip["pickup_latitude"] = pickup_info[0]
                 trip["pickup_longitude"] = pickup_info[1]
             except Exception as e:
