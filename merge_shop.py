@@ -12,7 +12,7 @@ dir_path = "./rawdata/shops/"
 if len(args) == 2:
     file_name = args[1]
 else:
-    file_name_base = "musashinakahara.csv"
+    file_name_base = "all_stations.csv"
     file_name = datetime.now().strftime('%y%m%d') + "_" + file_name_base
 
 TARGET_FILE_PATH = dir_path + file_name

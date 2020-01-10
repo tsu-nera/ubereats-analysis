@@ -31,7 +31,7 @@ class TripSpider(scrapy.Spider):
 
         options = ChromeOptions()
 
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -47,17 +47,17 @@ class TripSpider(scrapy.Spider):
         self.driver.get(response.url)
 
         # reCaptureが動いたときは手動で突破する
-        # sleep(30)
+        sleep(30)
 
         # reCaptureが動かないときは自動で
-        pit = Pit.get("uber_auth")
-        self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
-        self.driver.find_elements_by_class_name("btn")[0].click()
-        sleep(1)
-        self.driver.find_element_by_id("password").send_keys(pit['password'])
-        self.driver.find_elements_by_class_name("btn")[0].click()
-        WebDriverWait(self.driver, 30).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "tbody")))
+        # pit = Pit.get("uber_auth")
+        # self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
+        # self.driver.find_elements_by_class_name("btn")[0].click()
+        # sleep(1)
+        # self.driver.find_element_by_id("password").send_keys(pit['password'])
+        # self.driver.find_elements_by_class_name("btn")[0].click()
+        # WebDriverWait(self.driver, 30).until(
+        #     EC.presence_of_element_located((By.CSS_SELECTOR, "tbody")))
 
         res = response.replace(body=self.driver.page_source)
         shop_hrefs = res.xpath("//a/@href").re('(/p3/payments/trips/.*)')
