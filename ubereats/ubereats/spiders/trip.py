@@ -12,6 +12,8 @@ from selenium.common.exceptions import TimeoutException
 from ..items.trip import TripItem
 from ..constants.trip import BASE_DOMAIN, BASE_URL, WEEKLY_EARNINGS_BASE_URL
 
+# from scrapy.utils.response import open_in_browser
+
 
 class TripSpider(scrapy.Spider):
     name = 'trip'
@@ -47,17 +49,17 @@ class TripSpider(scrapy.Spider):
         self.driver.get(response.url)
 
         # reCaptureが動いたときは手動で突破する
-        sleep(30)
+        # sleep(30)
 
         # reCaptureが動かないときは自動で
-        # pit = Pit.get("uber_auth")
-        # self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
-        # self.driver.find_elements_by_class_name("btn")[0].click()
-        # sleep(1)
-        # self.driver.find_element_by_id("password").send_keys(pit['password'])
-        # self.driver.find_elements_by_class_name("btn")[0].click()
-        # WebDriverWait(self.driver, 30).until(
-        #     EC.presence_of_element_located((By.CSS_SELECTOR, "tbody")))
+        pit = Pit.get("uber_auth")
+        self.driver.find_element_by_id("useridInput").send_keys(pit['userId'])
+        self.driver.find_elements_by_class_name("btn")[0].click()
+        sleep(1)
+        self.driver.find_element_by_id("password").send_keys(pit['password'])
+        self.driver.find_elements_by_class_name("btn")[0].click()
+        WebDriverWait(self.driver, 30).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "tbody")))
 
         res = response.replace(body=self.driver.page_source)
         shop_hrefs = res.xpath("//a/@href").re('(/p3/payments/trips/.*)')
@@ -104,7 +106,7 @@ class TripSpider(scrapy.Spider):
                 res.css("h4::text").extract()[1].strip("km").strip())
 
             drive_info = res.css(
-                "div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
+                "div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"  # noqa
             ).extract()
 
             trip["pickup_time"] = drive_info[0].split(
@@ -136,6 +138,24 @@ class TripSpider(scrapy.Spider):
             # trip["drop_address"] = drive_info[3]
 
             trip["url"] = ref
+
+            # 現金対応
+            try:
+                trip["cash"] = int(
+                    res.css("div.c0.c1.d0>div>div.cy.br.cm::text").
+                    extract_first().replace("-￥", "").replace(",", ""))
+            except Exception:
+                trip["cash"] = 0
+
+            # ピーク
+            try:
+                test = res.css('div.bg>span.c0.c1.d7::text').extract()[1]
+                if '+' in test:
+                    trip["peak"] = int(test.replace('+￥', "").replace(',', ""))
+                else:
+                    trip["peak"] = 0
+            except Exception:
+                trip["peak"] = 0
 
             yield trip
 
