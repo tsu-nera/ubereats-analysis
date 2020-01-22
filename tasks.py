@@ -7,6 +7,8 @@ STATION_TYPE_NAKAHARA = "MUSASHINAKAHARA"
 STATION_TYPE_SHINJO = "MUSASHISHINJO"
 STATION_TYPE_KOSUGI = "MUSASHIKOSUGI"
 STATION_TYPE_MIZONOKUCHI = "MUSASHIMIZONOKUCHI"
+STATION_TYPE_KAWASAKI = "KAWASAKI"
+STATION_TYPE_JIYUGAOKA = "JIYUGAOKA"
 STATION_TYPE_ALL = "ALL"
 
 
@@ -49,6 +51,20 @@ def crawl_kosugi(c):
 def crawl_mizonokuchi(c):
     base_file_name = "musashimizonokuchi.csv"
     command = get_crawl_comand(base_file_name, STATION_TYPE_MIZONOKUCHI)
+    invoke.run(command)
+
+
+@invoke.task
+def crawl_kawasaki(c):
+    base_file_name = "kawasaki.csv"
+    command = get_crawl_comand(base_file_name, STATION_TYPE_KAWASAKI)
+    invoke.run(command)
+
+
+@invoke.task
+def crawl_jiyugaoka(c):
+    base_file_name = "jiyugaoka.csv"
+    command = get_crawl_comand(base_file_name, STATION_TYPE_JIYUGAOKA)
     invoke.run(command)
 
 
