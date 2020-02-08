@@ -75,13 +75,13 @@ def crawl(c):
     invoke.run(command1)
 
     file_name = get_filename_prefix() + "_" + base_file_name
-    command2 = "python merge_shop.py {}".format(file_name)
+    command2 = "python ubereates/utils/merge_shops.py {}".format(file_name)
     invoke.run(command2)
 
 
 @invoke.task
 def post(c, url):
-    command = "cd ubereats && rm ../rawdata/shops/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shops/shop.csv".format(  # noqa
+    command = "cd ubereats && rm -f ../rawdata/shops/shop.csv && scrapy crawl -a url={} post -o ../rawdata/shops/shop.csv".format(  # noqa
         url)  # noqa
     invoke.run(command)
 
@@ -101,13 +101,19 @@ def trip(c, year, month, day):
 
 @invoke.task
 def merge_trip(c):
-    command = "python merge_trip.py"
+    command = "python ubereats/utils/merge_trip.py"
+    invoke.run(command)
+
+
+@invoke.task
+def merge_shops(c):
+    command = "python ubereats/utils/merge_shops.py"
     invoke.run(command)
 
 
 @invoke.task
 def merge_shop(c):
-    command = "python merge_shop.py"
+    command = "python ubereats/utils/merge_shop.py"
     invoke.run(command)
 
 
