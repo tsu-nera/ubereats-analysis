@@ -43,10 +43,10 @@ class PostSpider(scrapy.Spider):
         point = response.css("span::text")[0].get().strip()
 
         if point != '•':
-            shop["point"] = float(point)
+            shop["point"] = float(
+                point.split('5 つ星のうち')[1].split(' の評価を獲得')[0].strip())
             shop["reviews"] = int(
-                response.css("span::text")[2].get().strip().strip("(").strip(
-                    ")").strip("+"))
+                point.split('の評価を獲得')[1].split('件の評価に基づいています')[0].strip())
 
         address_info = response.css("p::text")[-1].get().strip()
         postal_code_pattern = "[0-9]{3}-?[0-9]{4}"
