@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 
 MASTER_FILE_PATH = './data/shop_master.csv'
