@@ -26,8 +26,7 @@ class TripSpider(scrapy.Spider):
         self.month = month
         self.day = day
 
-        DAILY_EARNINGS_URL = WEEKLY_EARNINGS_BASE_URL + "/" + str(
-            year) + "/" + str(month) + "/" + str(day)  # noqa
+        DAILY_EARNINGS_URL = self._url(year, month, day)
 
         self.start_urls = [DAILY_EARNINGS_URL]
 
@@ -42,6 +41,10 @@ class TripSpider(scrapy.Spider):
         options.add_argument("--disable-gpu")
 
         self.driver = Chrome(options=options)
+
+    def _url(self, year, month, day):
+        return "{0}/{1}/{2}/{3}".format(WEEKLY_EARNINGS_BASE_URL, year,
+                                        month.zfill(2), day.zfill(2))
 
     def parse(self, response):
 
