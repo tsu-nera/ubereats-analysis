@@ -97,7 +97,7 @@ def trip(c, year, month, day):
 
     if os.path.exists(data_path):
         os.remove(data_path)
-    command = "cd ubereats && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(  # noqa
+    command = "cd ubereats && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{} -t 'csv'".format(  # noqa
         data_path, year, month, day, data_path)  # noqa
     invoke.run(command)
 
