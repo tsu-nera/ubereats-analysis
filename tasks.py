@@ -10,6 +10,7 @@ STATION_TYPE_KOSUGI = "MUSASHIKOSUGI"
 STATION_TYPE_MIZONOKUCHI = "MUSASHIMIZONOKUCHI"
 STATION_TYPE_KAWASAKI = "KAWASAKI"
 STATION_TYPE_JIYUGAOKA = "JIYUGAOKA"
+STATION_TYPE_HIYOSHI = "HIYOSHI"
 STATION_TYPE_ALL = "ALL"
 
 
@@ -70,6 +71,13 @@ def crawl_jiyugaoka(c):
 
 
 @invoke.task
+def crawl_hiyoshi(c):
+    base_file_name = "hiyoshi.csv"
+    command = get_crawl_comand(base_file_name, STATION_TYPE_HIYOSHI)
+    invoke.run(command)
+
+
+@invoke.task
 def crawl(c):
     base_file_name = "all_stations.csv"
     command1 = get_crawl_comand(base_file_name, STATION_TYPE_ALL)
@@ -111,6 +119,12 @@ def merge_trip(c):
 @invoke.task
 def merge_shops(c):
     command = "python ubereats/utils/merge_shops.py"
+    invoke.run(command)
+
+
+@invoke.task
+def merge_shops_yokohama(c):
+    command = "python ubereats/utils/merge_shops_yokohama.py"
     invoke.run(command)
 
 
