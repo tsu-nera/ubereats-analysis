@@ -20,6 +20,12 @@ See more detail at [env.yaml](https://github.com/tsu-nera/ubereats-analysis/blob
 
 https://drive.google.com/open?id=1Lt-zlVv4_A1y5v58Efbh9AsFg5Gw8X9q&usp=sharing
 
+#### おまけ(New!!)
+
+日吉マップも作成してみました。
+
+https://drive.google.com/open?id=1LxYirZiN_uRuybiq93tJP30NllOVgOAf&usp=sharing
+
 ## 分析結果と考察
 
 Jupyter Notebook は以下。
