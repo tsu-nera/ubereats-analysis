@@ -20,7 +20,7 @@ def get_filename_prefix():
     return now.strftime('%y%m%d')
 
 
-def get_crawl_comand(base_file_name, station_type):
+def get_crawl_command(base_file_name, station_type):
     file_name = get_filename_prefix() + "_" + base_file_name
     data_path = RAWDATA_SHOPS_DIR + "/" + file_name
 
@@ -31,61 +31,61 @@ def get_crawl_comand(base_file_name, station_type):
 @invoke.task
 def crawl_nakahara(c):
     base_file_name = "musashinakahara.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_NAKAHARA)
+    command = get_crawl_command(base_file_name, STATION_TYPE_NAKAHARA)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_shinjo(c):
     base_file_name = "musashishinjo.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_SHINJO)
+    command = get_crawl_command(base_file_name, STATION_TYPE_SHINJO)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_kosugi(c):
     base_file_name = "musashikosugi.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_KOSUGI)
+    command = get_crawl_command(base_file_name, STATION_TYPE_KOSUGI)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_mizonokuchi(c):
     base_file_name = "musashimizonokuchi.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_MIZONOKUCHI)
+    command = get_crawl_command(base_file_name, STATION_TYPE_MIZONOKUCHI)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_kawasaki(c):
     base_file_name = "kawasaki.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_KAWASAKI)
+    command = get_crawl_command(base_file_name, STATION_TYPE_KAWASAKI)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_jiyugaoka(c):
     base_file_name = "jiyugaoka.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_JIYUGAOKA)
+    command = get_crawl_command(base_file_name, STATION_TYPE_JIYUGAOKA)
     invoke.run(command)
 
 
 @invoke.task
 def crawl_hiyoshi(c):
     base_file_name = "hiyoshi.csv"
-    command = get_crawl_comand(base_file_name, STATION_TYPE_HIYOSHI)
+    command = get_crawl_command(base_file_name, STATION_TYPE_HIYOSHI)
     invoke.run(command)
 
 
 @invoke.task
 def crawl(c):
     base_file_name = "all_stations.csv"
-    command1 = get_crawl_comand(base_file_name, STATION_TYPE_ALL)
+    command1 = get_crawl_command(base_file_name, STATION_TYPE_ALL)
     invoke.run(command1)
 
-    file_name = get_filename_prefix() + "_" + base_file_name
-    command2 = "python ubereats/utils/merge_shops.py {}".format(file_name)
-    invoke.run(command2)
+    # file_name = get_filename_prefix() + "_" + base_file_name
+    # command2 = "python ubereats/utils/merge_shops.py {}".format(file_name)
+    # invoke.run(command2)
 
 
 @invoke.task
