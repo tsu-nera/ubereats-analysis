@@ -84,7 +84,7 @@ def crawl(c):
     invoke.run(command1)
 
     file_name = get_filename_prefix() + "_" + base_file_name
-    command2 = "python ubereates/utils/merge_shops.py {}".format(file_name)
+    command2 = "python ubereats/utils/merge_shops.py {}".format(file_name)
     invoke.run(command2)
 
 

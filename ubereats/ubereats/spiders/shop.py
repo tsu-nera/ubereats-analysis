@@ -32,8 +32,8 @@ STATION_DICT = {
     STATION_TYPE_JIYUGAOKA: [JIYUGAOKA_SHOP_URL],
     STATION_TYPE_HIYOSHI: [HIYOSHI_SHOP_URL],
     STATION_TYPE_ALL: [
-        MUSASHINAKAHARA_SHOP_URL, MUSASHIKOSUGI_SHOP_URL, MUSASHISHINJO_SHOP_URL,
-        MIZONOKUCHI_SHOP_URL
+        MUSASHINAKAHARA_SHOP_URL, MUSASHIKOSUGI_SHOP_URL,
+        MUSASHISHINJO_SHOP_URL, MIZONOKUCHI_SHOP_URL
     ]
 }
 
@@ -67,12 +67,15 @@ class ShopSpider(scrapy.Spider):
         #     EC.presence_of_element_located((By.CSS_SELECTOR, "article.af")))
 
         # article.afのタグが見つからなくなってしまった。仕様変更？とりあえず10secのwait.
+
         time.sleep(10)
 
         pre_loaded_count = 0
 
+        print(self.driver.current_url)
+
         res = response.replace(body=self.driver.page_source)
-        shop_hrefs = res.xpath("//a/@href").re('(/ja-JP/.*/food-delivery/.*)')
+        shop_hrefs = res.xpath("//a/@href").re('(/jp/.*/food-delivery/.*)')
         loaded_count = len(shop_hrefs)
 
         while loaded_count > pre_loaded_count:
@@ -100,8 +103,7 @@ class ShopSpider(scrapy.Spider):
             pre_loaded_count = loaded_count
 
             res = response.replace(body=self.driver.page_source)
-            shop_hrefs = res.xpath("//a/@href").re(
-                '(/ja-JP/.*/food-delivery/.*)')
+            shop_hrefs = res.xpath("//a/@href").re('(/jp/.*/food-delivery/.*)')
             loaded_count = len(shop_hrefs)
 
     def parse_shop(self, response):
