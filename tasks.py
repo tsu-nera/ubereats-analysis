@@ -138,3 +138,12 @@ def merge_shop(c):
 def shell(c):
     command = "scrapy shell file://$PWD/tmp/target.html"
     invoke.run(command)
+
+
+@invoke.task
+def eval_trip(c):
+    command_base = "jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=-1 --execute --inplace --ExecutePreprocessor.kernel_name=python"
+    file_path = os.path.join("notebooks", "trip_analysis.ipynb")
+    command = " ".join([command_base, file_path])
+
+    invoke.run(command)
