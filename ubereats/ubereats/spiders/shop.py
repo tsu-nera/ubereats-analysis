@@ -50,7 +50,7 @@ class ShopSpider(scrapy.Spider):
 
         options = ChromeOptions()
 
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("start-maximized")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -167,12 +167,13 @@ class ShopSpider(scrapy.Spider):
         shop["latitude"] = map_info[0]
         shop["longitude"] = map_info[1]
 
-        hour_list = [
-            s for s in res.css("tbody>tr>td::text").getall() if ":" in s
-        ]
+        # 正確にパースできないため封印
+        # hour_list = [
+        #     s for s in res.css("tbody>tr>td::text").getall() if ":" in s
+        # ]
 
-        shop["open_hour"] = hour_list[0]
-        shop["close_hour"] = hour_list[-1]
+        # shop["open_hour"] = hour_list[0]
+        # shop["close_hour"] = hour_list[-1]
 
         yield shop
 
