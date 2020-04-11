@@ -11,5 +11,5 @@ class ShopItem(scrapy.Item):
     url = scrapy.Field()  # 店舗URL
     latitude = scrapy.Field()  # 緯度
     longitude = scrapy.Field()  # 経度
-    open_hour = scrapy.Field()  # 開始時刻
-    close_hour = scrapy.Field()  # 終了時刻
+    # open_hour = scrapy.Field()  # 開始時刻
+    # close_hour = scrapy.Field()  # 終了時刻
