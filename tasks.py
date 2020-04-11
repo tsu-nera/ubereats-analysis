@@ -79,13 +79,20 @@ def crawl_hiyoshi(c):
 
 @invoke.task
 def crawl(c):
-    base_file_name = "all_stations.csv"
-    command1 = get_crawl_command(base_file_name, STATION_TYPE_ALL)
-    invoke.run(command1)
+    crawl_nakahara(c)
+    crawl_kosugi(c)
+    crawl_shinjo(c)
+    crawl_mizonokuchi(c)
 
-    # file_name = get_filename_prefix() + "_" + base_file_name
-    # command2 = "python ubereats/utils/merge_shops.py {}".format(file_name)
-    # invoke.run(command2)
+
+# def crawl(c):
+#     base_file_name = "all_stations.csv"
+#     command1 = get_crawl_command(base_file_name, STATION_TYPE_ALL)
+#     invoke.run(command1)
+
+#     file_name = get_filename_prefix() + "_" + base_file_name
+#     command2 = "python ubereats/utils/merge_shops.py {}".format(file_name)
+#     invoke.run(command2)
 
 
 @invoke.task
