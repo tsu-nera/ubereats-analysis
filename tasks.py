@@ -83,6 +83,7 @@ def crawl(c):
     crawl_kosugi(c)
     crawl_shinjo(c)
     crawl_mizonokuchi(c)
+    crawl_miyazakidai(c)
 
 
 # def crawl(c):
