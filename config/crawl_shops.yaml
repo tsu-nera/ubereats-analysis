@@ -1,0 +1,23 @@
+- defaultTab: nodes
+  description: ウーバーイーツ加盟店のクローリング
+  executionEnabled: true
+  id: cd90b0ee-19c7-4dab-bbf5-b12500048978
+  loglevel: INFO
+  name: crawl shops
+  nodeFilterEditable: false
+  schedule:
+    month: '*'
+    time:
+      hour: '03'
+      minute: '00'
+      seconds: '0'
+    weekday:
+      day: '*'
+    year: '*'
+  scheduleEnabled: true
+  sequence:
+    commands:
+    - exec: /home/tsu-nera/repo/ubereats-analysis/bin/crawl.sh
+    keepgoing: false
+    strategy: node-first
+  uuid: cd90b0ee-19c7-4dab-bbf5-b12500048978
