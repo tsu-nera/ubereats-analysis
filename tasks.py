@@ -30,7 +30,7 @@ def crawl_nakahara(c):
 @invoke.task
 def crawl_shinjo(c):
     base_file_name = "musashishinjo.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_SHINJO)
     invoke.run(command)
 
@@ -38,7 +38,7 @@ def crawl_shinjo(c):
 @invoke.task
 def crawl_kosugi(c):
     base_file_name = "musashikosugi.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_KOSUGI)
     invoke.run(command)
 
@@ -46,7 +46,7 @@ def crawl_kosugi(c):
 @invoke.task
 def crawl_mizonokuchi(c):
     base_file_name = "musashimizonokuchi.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_MIZONOKUCHI)
     invoke.run(command)
 
@@ -54,7 +54,7 @@ def crawl_mizonokuchi(c):
 @invoke.task
 def crawl_kawasaki(c):
     base_file_name = "kawasaki.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_KAWASAKI)
     invoke.run(command)
 
@@ -62,7 +62,7 @@ def crawl_kawasaki(c):
 @invoke.task
 def crawl_jiyugaoka(c):
     base_file_name = "jiyugaoka.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_JIYUGAOKA)
     invoke.run(command)
 
@@ -70,7 +70,7 @@ def crawl_jiyugaoka(c):
 @invoke.task
 def crawl_hiyoshi(c):
     base_file_name = "hiyoshi.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_HIYOSHI)
     invoke.run(command)
 
@@ -78,7 +78,7 @@ def crawl_hiyoshi(c):
 @invoke.task
 def crawl_miyazakidai(c):
     base_file_name = "miyazakidai.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_MIYAZAKIDAI)
     invoke.run(command)
 
@@ -86,7 +86,7 @@ def crawl_miyazakidai(c):
 @invoke.task
 def crawl_motosumiyoshi(c):
     base_file_name = "motosumiyoshi.csv"
-    remove_rawfile(base_file_name)    
+    remove_rawfile(base_file_name)
     command = get_crawl_command(base_file_name, SC.STATION_TYPE_MOTOSUMIYOSHI)
     invoke.run(command)
 
