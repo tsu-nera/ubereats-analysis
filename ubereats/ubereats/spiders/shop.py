@@ -9,43 +9,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from ..items.shop import ShopItem
-from ..constants.shop import BASE_DOMAIN, BASE_URL  # noqa
-from ..constants.shop import MUSASHINAKAHARA_SHOP_URL, MIZONOKUCHI_SHOP_URL, MUSASHISHINJO_SHOP_URL, MUSASHIKOSUGI_SHOP_URL, MUSASHIKOSUGI_SHOP_URL  # noqa
-from ..constants.shop import KAWASAKI_SHOP_URL, JIYUGAOKA_SHOP_URL, HIYOSHI_SHOP_URL
-
-STATION_TYPE_NAKAHARA = "MUSASHINAKAHARA"
-STATION_TYPE_SHINJO = "MUSASHISHINJO"
-STATION_TYPE_KOSUGI = "MUSASHIKOSUGI"
-STATION_TYPE_MIZONOKUCHI = "MUSASHIMIZONOKUCHI"
-STATION_TYPE_KAWASAKI = "KAWASAKI"
-STATION_TYPE_JIYUGAOKA = "JIYUGAOKA"
-STATION_TYPE_HIYOSHI = "HIYOSHI"
-STATION_TYPE_ALL = "ALL"
-
-STATION_DICT = {
-    STATION_TYPE_NAKAHARA: [MUSASHINAKAHARA_SHOP_URL],
-    STATION_TYPE_KOSUGI: [MUSASHIKOSUGI_SHOP_URL],
-    STATION_TYPE_MIZONOKUCHI: [MIZONOKUCHI_SHOP_URL],
-    STATION_TYPE_SHINJO: [MUSASHIKOSUGI_SHOP_URL],
-    STATION_TYPE_KAWASAKI: [KAWASAKI_SHOP_URL],
-    STATION_TYPE_JIYUGAOKA: [JIYUGAOKA_SHOP_URL],
-    STATION_TYPE_HIYOSHI: [HIYOSHI_SHOP_URL],
-    STATION_TYPE_ALL: [
-        MUSASHINAKAHARA_SHOP_URL, MUSASHIKOSUGI_SHOP_URL,
-        MUSASHISHINJO_SHOP_URL, MIZONOKUCHI_SHOP_URL
-    ]
-}
+from ..constants import shop as SC
 
 
 class ShopSpider(scrapy.Spider):
     name = 'shop'
-    allowed_domains = [BASE_DOMAIN]
+    allowed_domains = [SC.BASE_DOMAIN]
 
-    def __init__(self, station_type=STATION_TYPE_NAKAHARA, *args, **kwargs):
+    def __init__(self, station_type=SC.STATION_TYPE_NAKAHARA, *args, **kwargs):
         super(ShopSpider, self).__init__(*args, **kwargs)
 
         self.station_type = station_type
-        self.start_urls = STATION_DICT[station_type]
+        self.start_urls = SC.STATION_DICT[station_type]
 
         options = ChromeOptions()
 
@@ -82,7 +57,7 @@ class ShopSpider(scrapy.Spider):
                   "/loaded count:" + str(loaded_count))
 
             for href in shop_hrefs[pre_loaded_count:]:
-                full_url = BASE_URL + href
+                full_url = SC.BASE_URL + href
 
                 yield scrapy.Request(full_url, callback=self.parse_shop)
 
@@ -135,7 +110,7 @@ class ShopSpider(scrapy.Spider):
 
         shop["url"] = response.url.strip().split("?promo=")[0]
         shop["id"] = shop["url"].split("/")[-2]
-        detail_url = BASE_URL + response.xpath("//p/a/@href").get()
+        detail_url = SC.BASE_URL + response.xpath("//p/a/@href").get()
 
         request = scrapy.Request(detail_url, callback=self.parse_shop_detail)
         request.meta['shop'] = shop
