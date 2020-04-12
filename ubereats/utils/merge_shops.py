@@ -31,22 +31,22 @@ master = pd.read_csv(MASTER_FILE_PATH, index_col='id')
 
 for file_path in FILE_PATH_LIST:
     df = pd.read_csv(file_path, index_col="id")
-    data = pd.concat([master, df], sort=False).drop_duplicates(subset="url",
-                                                               keep="last")
+    master = pd.concat([master, df], sort=False).drop_duplicates(subset="url",
+                                                                 keep="last")
 
 # master
-data.to_csv(MASTER_FILE_PATH, index=True, mode="w")
+master.to_csv(MASTER_FILE_PATH, index=True, mode="w")
 
 # googlemap
 googlemap = pd.DataFrame()
-googlemap["店名"] = data["name"]
-googlemap["住所"] = data["address"]
-googlemap["緯度"] = data["latitude"]
-googlemap["経度"] = data["longitude"]
+googlemap["店名"] = master["name"]
+googlemap["住所"] = master["address"]
+googlemap["緯度"] = master["latitude"]
+googlemap["経度"] = master["longitude"]
 # googlemap["開始"] = data["open_hour"]
 # googlemap["終了"] = data["close_hour"]
-googlemap["点数"] = data["point"]
-googlemap["レビュー数"] = data["reviews"]
-googlemap["URL"] = data["url"]
+googlemap["点数"] = master["point"]
+googlemap["レビュー数"] = master["reviews"]
+googlemap["URL"] = master["url"]
 
 googlemap.to_csv(GOOGLEMAP_FILE_PATH, index=False, mode="w")
