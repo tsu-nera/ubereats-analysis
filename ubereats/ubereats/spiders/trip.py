@@ -1,7 +1,6 @@
 import scrapy
 
 from time import sleep
-from pit import Pit
 
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,7 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from ..items.trip import TripItem
 from ..constants.trip import BASE_DOMAIN, BASE_URL, WEEKLY_EARNINGS_BASE_URL
 
-# from scrapy.utils.response import open_in_browser
+from scrapy.utils.response import open_in_browser
 
 
 class TripSpider(scrapy.Spider):
@@ -80,7 +79,14 @@ class TripSpider(scrapy.Spider):
                     self.driver.get(ref)
                     WebDriverWait(self.driver, 10).until(
                         EC.presence_of_element_located(
-                            (By.CSS_SELECTOR, "img.af")))
+                            (By.CSS_SELECTOR, "img")))
+                    WebDriverWait(self.driver, 10).until(
+                        EC.invisibility_of_element_located((
+                            By.CSS_SELECTOR,
+                            "div>div>div>div>div>div>div>div>div>div>div>div>div>div"
+                        )))
+                    # waitがうまくいかないな。とりあえずsleepつかった。
+                    sleep(3)
                     res = response.replace(body=self.driver.page_source)
                 except TimeoutException:
                     pass
@@ -100,13 +106,14 @@ class TripSpider(scrapy.Spider):
                 "div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
             ).extract()[2].split(",")[0]
 
-            drive_time_minutes = int(
-                res.css("h4::text").extract()[0].split("分")[0])
-            drive_time_seconds = int(
-                res.css("h4::text").extract()[0].split("分")[1].strip(
-                    "秒").strip())  # noqa
-            trip["drive_time"] = round(
-                drive_time_minutes + drive_time_seconds / 60, 1)
+            if res.css("h4::text").extract()[0] != "0 秒":
+                drive_time_minutes = int(
+                    res.css("h4::text").extract()[0].split("分")[0])
+                drive_time_seconds = int(
+                    res.css("h4::text").extract()[0].split("分")[1].strip(
+                        "秒").strip())  # noqa
+                trip["drive_time"] = round(
+                    drive_time_minutes + drive_time_seconds / 60, 1)
             trip["distance"] = float(
                 res.css("h4::text").extract()[1].strip("km").strip())
 
