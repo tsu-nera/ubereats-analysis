@@ -106,14 +106,6 @@ class TripSpider(scrapy.Spider):
                 "div>div>div>div>div>div>div>div>div>div>div>div>div>div::text"
             ).extract()[2].split(",")[0]
 
-            if res.css("h4::text").extract()[0] != "0 秒":
-                drive_time_minutes = int(
-                    res.css("h4::text").extract()[0].split("分")[0])
-                drive_time_seconds = int(
-                    res.css("h4::text").extract()[0].split("分")[1].strip(
-                        "秒").strip())  # noqa
-                trip["drive_time"] = round(
-                    drive_time_minutes + drive_time_seconds / 60, 1)
             trip["distance"] = float(
                 res.css("h4::text").extract()[1].strip("km").strip())
 
@@ -124,8 +116,6 @@ class TripSpider(scrapy.Spider):
             trip["pickup_time"] = drive_info[0].split(
                 ":")[0] + ":" + drive_info[0].split(":")[1]
             trip["pickup_address"] = drive_info[1]
-
-            trip["price"] = int(res.css("h1::text").extract()[0].strip("￥"))
 
             try:
                 img_url = res.css("img")[1].xpath("@src").extract()[0]
@@ -166,17 +156,24 @@ class TripSpider(scrapy.Spider):
 
             trip["url"] = ref
 
+            # 支払額
+            trip["price"] = int(
+                res.css("h1::text").extract_first().replace("￥", ""))
+
             # 現金対応
             try:
                 trip["cash"] = int(
-                    res.css("div.c0.c1.d0>div>div.cy.br.cm::text").
-                    extract_first().replace("-￥", "").replace(",", ""))
+                    res.css(
+                        'div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text'
+                    ).extract_first().replace("-￥", "").replace(",", ""))
             except Exception:
                 trip["cash"] = 0
 
             # ピーク
             try:
-                test = res.css('div.bg>span.c0.c1.d7::text').extract()[1]
+                test = res.css(
+                    "div>div>div>div>div>div>div>div>div>div>div>div>div>div>span::text"
+                )[2].extract()
                 if '+' in test:
                     trip["peak"] = int(test.replace('+￥', "").replace(',', ""))
                 else:
@@ -184,7 +181,37 @@ class TripSpider(scrapy.Spider):
             except Exception:
                 trip["peak"] = 0
 
-            yield trip
+            if res.css("h4::text").extract()[0] != "0 秒":
+                # シングル案件
+                drive_time_minutes = int(
+                    res.css("h4::text").extract()[0].split("分")[0])
+                drive_time_seconds = int(
+                    res.css("h4::text").extract()[0].split("分")[1].strip(
+                        "秒").strip())  # noqa
+                trip["drive_time"] = round(
+                    drive_time_minutes + drive_time_seconds / 60, 1)
+
+                yield trip
+            else:
+                # ダブル案件
+                trip2 = trip.copy()
+
+                trip["price"] = 0
+                trip["cash"] = 0
+                trip["peak"] = 0
+                trip["distance"] = 0
+                trip["drive_time"] = 0
+
+                yield trip
+
+                def time_to_num(time_str):
+                    tmp = time_str.split(":")
+                    return int(tmp[0]) * 60 + int(tmp[1])
+
+                trip2["drive_time"] = time_to_num(
+                    trip2["drop_time"]) - time_to_num(trip["pickup_time"])
+                trip2["url"] = trip2["url"] + "/"
+                yield trip2
 
     def closed(self, reason):
         self.driver.close()
