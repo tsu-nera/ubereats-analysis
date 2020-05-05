@@ -11,7 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from ..items.trip import TripItem
 from ..constants.trip import BASE_DOMAIN, BASE_URL, WEEKLY_EARNINGS_BASE_URL
 
-from scrapy.utils.response import open_in_browser
+# from scrapy.utils.response import open_in_browser
 
 
 class TripSpider(scrapy.Spider):
@@ -158,7 +158,8 @@ class TripSpider(scrapy.Spider):
 
             # 支払額
             trip["price"] = int(
-                res.css("h1::text").extract_first().replace("￥", ""))
+                res.css("h1::text").extract_first().replace("￥", "").replace(
+                    ",", ""))
 
             # 現金対応
             try:
