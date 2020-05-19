@@ -11,7 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from ..items.trip import TripItem
 from ..constants.trip import BASE_DOMAIN, BASE_URL, WEEKLY_EARNINGS_BASE_URL
 
-# from scrapy.utils.response import open_in_browser
+from scrapy.utils.response import open_in_browser
 
 
 class TripSpider(scrapy.Spider):
@@ -73,7 +73,6 @@ class TripSpider(scrapy.Spider):
             refs_set.add(BASE_URL + href.split("?showBackLink")[0])
 
         for ref in refs_set:
-
             for _ in range(3):  # 最大3回実行
                 try:
                     self.driver.get(ref)
@@ -94,6 +93,8 @@ class TripSpider(scrapy.Spider):
                     break  # 失敗しなかった時はループを抜ける
             else:
                 raise (TimeoutException())  # リトライが全部失敗した時の処理
+
+            # open_in_browser(res)
 
             trip = TripItem()
 
@@ -165,8 +166,8 @@ class TripSpider(scrapy.Spider):
             try:
                 trip["cash"] = int(
                     res.css(
-                        'div>div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text'
-                    ).extract_first().replace("-￥", "").replace(",", ""))
+                        'div>div>div>div>div>div>div>div>div>div>div>div>div>div>div::text'
+                    ).extract_first().replace("￥", "").replace(",", ""))
             except Exception:
                 trip["cash"] = 0
 
@@ -174,11 +175,8 @@ class TripSpider(scrapy.Spider):
             try:
                 test = res.css(
                     "div>div>div>div>div>div>div>div>div>div>div>div>div>div>span::text"
-                )[2].extract()
-                if '+' in test:
-                    trip["peak"] = int(test.replace('+￥', "").replace(',', ""))
-                else:
-                    trip["peak"] = 0
+                )[1].extract()
+                trip["peak"] = int(test.replace('￥', "").replace(',', ""))
             except Exception:
                 trip["peak"] = 0
 
